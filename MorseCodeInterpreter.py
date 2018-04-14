@@ -37,8 +37,7 @@ ASCII_TABLE = {
 	'9' : "----.",
 	'0' : "-----",
 	
-	' ' : '/',
-	'' : ''
+	' ' : '/'
 }
 
 MORSE_CODE_TABLE = {v : k for k, v in ASCII_TABLE.items()}
@@ -59,7 +58,7 @@ def convert_to_morse_code(str):
 	for c in str.upper():
 		morse_string += ASCII_TABLE[c] + " "
 		
-	return morse_string
+	return morse_string.rstrip()
 
 def convert_to_ascii(str):
 	if is_ascii(str):
