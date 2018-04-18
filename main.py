@@ -13,6 +13,5 @@ if __name__ == "__main__":
     
     key = TelegraphKey(PIN)
     
-    while True:
-        key.key_string()
+    print(key.key_string())
 	
