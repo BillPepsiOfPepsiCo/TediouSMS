@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 import time
 
 PIN = 17
-DIT_LENGTH = 0
-DAH_LENGTH = DIT_LENGTH * 3
+DIT_LENGTH = 0.07
+DAH_LENGTH = DIT_LENGTH * 3 #0.21
 
 #Returns the length of time for which the button was pressed
 def listen():
