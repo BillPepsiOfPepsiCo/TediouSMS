@@ -22,27 +22,34 @@ class TelegraphKey(object):
 	#pin -> the pin the button runs to to provide output.
 	def __init__(self, pin):
 		self.pin = pin
+		
+	def key_string(self):
+		while True:
+			print(self.key_character())
 
 	def key_character(self):
+		character = ""
 		unit = self.key_unit_positive()
 		
 		if unit > UNIT_LENGTH and unit < DASH_LENGTH:
-			print ".",
+			character += "."
 		elif unit > DASH_LENGTH and unit < WORD_SPACE_LENGTH:
-			print "-",
+			character += "-"
 			
 		negative_unit = self.key_unit_negative()
 			
 		if negative_unit > LETTER_PART_SPACE_LENGTH and negative_unit < LETTER_SPACE_LENGTH:
-			#print("")
-                        pass
+			#There's not really anything to do between parts of letters
+              pass
 		elif negative_unit > LETTER_SPACE_LENGTH and negative_unit < WORD_SPACE_LENGTH:
-			print " ",
+			#Put a space between letters
+			character += " "
 		elif negative_unit > WORD_SPACE_LENGTH:
-			print "/",
+			#Put a slash to denote a space between words
+			character += "/"
 	
 	#Key a "positive" unit - i.e. a unit coded by the user pressing then releasing the button
-	#Used for everything besides unit measurements between letters and words
+	#Used for everything besides unit measurements between letters and words.
 	def key_unit_positive(self):
 		#Hang until the button is pressed
 		while not GPIO.input(self.pin):
@@ -60,7 +67,8 @@ class TelegraphKey(object):
 		
 	
 	#Key a "negative" unit -- i.e. a unit that represents the space between letters or other units,
-	#and is not actually part of the message.
+	#and is not actually part of the message. This takes place between when the button is released and
+	#when it is pressed again.
 	def key_unit_negative(self):
 		#Record the start time
 		start = time.time()
