@@ -7,5 +7,5 @@ if __name__ == "__main__":
 	STRING3 = convert_to_ascii(STRING2)
 	
 	assert STRING == "COLLIN MOM GAY SEND HELP"
-	assert STRING2 == "-.-. --- .-.. .-.. .. -. / -- --- -- / --. .- -.-- / ... . -. -.. / .... . .-.. .--. "
+	assert STRING2 == "-.-. --- .-.. .-.. .. -. / -- --- -- / --. .- -.-- / ... . -. -.. / .... . .-.. .--."
 	assert STRING3 == "COLLIN MOM GAY SEND HELP"
