@@ -10,7 +10,7 @@
 """
 
 from Tkinter import *
-from base_GUI_ui import Base_GUI
+from tsmsui import Base_GUI
 
 # BEGIN USER CODE global
 
@@ -113,7 +113,7 @@ def main():
     except NameError: pass
     root = Tk()
     demo = CustomBase_GUI(root)
-    root.title('base_GUI')
+    root.title('tsmsui')
     try: run()
     except NameError: pass
     root.protocol('WM_DELETE_WINDOW', root.quit)
