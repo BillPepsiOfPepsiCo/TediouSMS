@@ -7,6 +7,7 @@ The associated callback file should be modified instead.
 """
 
 import Tkinter
+from Tkinter import *
 import os # needed for relative image paths
 
 # Using new-style classes: create empty base class object
@@ -26,93 +27,100 @@ class Base_GUI(object):
 			font = "{MS Sans Serif} 14 bold",
 			text = "Sending",
 		)
+		
 		self.receiving_label = Tkinter.Label(root,
 			font = "{MS Sans Serif} 14 bold",
 			text = "Receiving",
 		)
-		self._button_2 = Tkinter.Button(root,
+
+		self.send_button = Tkinter.Button(root,
 			font = "{MS Sans Serif} 14 bold",
 			text = "SEND",
 		)
-		self._entry_1 = Tkinter.Entry(root,
+		
+		self.recipient_ip_entry_field = Tkinter.Entry(root,
 			width = 0,
 		)
-		self._label_5 = Tkinter.Label(root,
+		
+		self.recipient_ip_address_label = Tkinter.Label(root,
 			font = "{MS Sans Serif} 12",
 			text = "Recipient IP Address",
 		)
-		self._label_6 = Tkinter.Label(root,
+		
+		self.user_ip_address_label = Tkinter.Label(root,
 			font = "{MS Sans Serif} 12",
 			text = "Your IP Address",
 		)
-		self._text_2 = Tkinter.Text(root,
+		
+		self.outbound_message_textbox = Tkinter.Text(root,
 			height = 0,
 			width = 0,
 		)
-		self._text_3 = Tkinter.Text(root,
+				
+		self.inbound_message_texbox = Tkinter.Text(root,
 			height = 0,
 			width = 0,
 		)
-		self._entry_2 = Tkinter.Entry(root,
+		
+		self.user_ip_entry_field = Tkinter.Entry(root,
 			width = 0,
 		)
-		self._checkbutton_1 = Tkinter.Checkbutton(root,
+		
+		self.listening_checkbox = Tkinter.Checkbutton(root,
 			font = "{MS Sans Serif} 12 bold",
 			text = "Listening on IP",
 		)
 
 		# widget commands
 
-
-		self._button_2.configure(
-			command = self._button_2_command
+		self.send_button.configure(
+			command = self.on_send_button_clicked
 		)
 		
-		self._entry_1.configure(
-			invalidcommand = self._entry_1_invalidcommand
+		self.recipient_ip_entry_field.configure(
+			invalidcommand = self.recipient_ip_entry_field_invalidcommand
 		)
 		
-		self._entry_1.configure(
-			validatecommand = self._entry_1_validatecommand
+		self.recipient_ip_entry_field.configure(
+			validatecommand = self.recipient_ip_entry_field_validatecommand
 		)
 		
-		self._entry_1.configure(
-			xscrollcommand = self._entry_1_xscrollcommand
+		self.recipient_ip_entry_field.configure(
+			xscrollcommand = self.recipient_ip_entry_field_xscrollcommand
 		)
 		
-		self._text_2.configure(
-			xscrollcommand = self._text_2_xscrollcommand
+		self.user_ip_entry_field.configure(
+			invalidcommand = self.user_ip_entry_field_invalidcommand
 		)
 		
-		self._text_2.configure(
-			yscrollcommand = self._text_2_yscrollcommand
+		self.user_ip_entry_field.configure(
+			validatecommand = self.user_ip_entry_field_validatecommand
 		)
 		
-		self._text_3.configure(
-			xscrollcommand = self._text_3_xscrollcommand
+		self.user_ip_entry_field.configure(
+			xscrollcommand = self.user_ip_entry_field_xscrollcommand
 		)
 		
-		self._text_3.configure(
-			yscrollcommand = self._text_3_yscrollcommand
+		self.outbound_message_textbox.configure(
+			xscrollcommand = self.outbound_message_textbox_xscrollcommand
 		)
 		
-		self._entry_2.configure(
-			invalidcommand = self._entry_2_invalidcommand
+		self.outbound_message_textbox.configure(
+			yscrollcommand = self.outbound_message_textbox_yscrollcommand
 		)
 		
-		self._entry_2.configure(
-			validatecommand = self._entry_2_validatecommand
+		self.inbound_message_texbox.configure(
+			xscrollcommand = self.inbound_message_texbox_xscrollcommand
 		)
 		
-		self._entry_2.configure(
-			xscrollcommand = self._entry_2_xscrollcommand
-		)
-		
-		self._checkbutton_1.configure(
-			command = self._checkbutton_1_command
+		self.inbound_message_texbox.configure(
+			yscrollcommand = self.inbound_message_texbox_yscrollcommand
 		)
 
-
+		self.listening_checkbox.configure(
+			command = self.listening_checkbox_command
+		)
+		
 		# Geometry Management
 		self.sending_label.grid(
 			in_    = root,
@@ -138,7 +146,7 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		self._button_2.grid(
+		self.send_button.grid(
 			in_    = root,
 			column = 1,
 			row    = 3,
@@ -150,7 +158,7 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		self._entry_1.grid(
+		self.recipient_ip_entry_field.grid(
 			in_    = root,
 			column = 2,
 			row    = 5,
@@ -162,7 +170,7 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = "ew"
 		)
-		self._label_5.grid(
+		self.recipient_ip_address_label.grid(
 			in_    = root,
 			column = 2,
 			row    = 4,
@@ -174,7 +182,7 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		self._label_6.grid(
+		self.user_ip_address_label.grid(
 			in_    = root,
 			column = 1,
 			row    = 4,
@@ -186,7 +194,7 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		self._text_2.grid(
+		self.outbound_message_textbox.grid(
 			in_    = root,
 			column = 1,
 			row    = 2,
@@ -198,7 +206,7 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = "news"
 		)
-		self._text_3.grid(
+		self.inbound_message_texbox.grid(
 			in_    = root,
 			column = 2,
 			row    = 2,
@@ -211,7 +219,7 @@ class Base_GUI(object):
 			sticky = "news"
 		)
 		
-		self._entry_2.grid(
+		self.user_ip_entry_field.grid(
 			in_    = root,
 			column = 1,
 			row    = 5,
@@ -224,7 +232,7 @@ class Base_GUI(object):
 			sticky = "ew"
 		)
 		
-		self._checkbutton_1.grid(
+		self.listening_checkbox.grid(
 			in_    = root,
 			column = 2,
 			row    = 3,

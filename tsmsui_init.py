@@ -17,95 +17,43 @@ from tsmsui import Base_GUI
 # END USER CODE global
 
 class CustomBase_GUI(Base_GUI):
-    pass
+    
+	def on_send_button_clicked(self, *args):
+		print(args)
+		
+	def recipient_ip_entry_field_invalidcommand(self, *args):
+		print(args)
+		
+	def recipient_ip_entry_field_validatecommand(self, *args):
+		print(args)
+		
+	def recipient_ip_entry_field_xscrollcommand(self, *args):
+		print(args)
+		
+	def user_ip_entry_field_invalidcommand(self, *args):
+		print(args)
+		
+	def user_ip_entry_field_validatecommand(self, *args):
+		print(args)
+		
+	def user_ip_entry_field_xscrollcommand(self, *args):
+		print(args)
 
-    # BEGIN CALLBACK CODE
-    # ONLY EDIT CODE INSIDE THE def FUNCTIONS.
-
-    # _button_2_command --
-    #
-    # Callback to handle _button_2 widget option -command
-    def _button_2_command(self, *args):
-        pass
-
-    # _checkbutton_1_command --
-    #
-    # Callback to handle _checkbutton_1 widget option -command
-    def _checkbutton_1_command(self, *args):
-        pass
-
-    # _entry_1_invalidcommand --
-    #
-    # Callback to handle _entry_1 widget option -invalidcommand
-    def _entry_1_invalidcommand(self, *args):
-        pass
-
-    # _entry_1_validatecommand --
-    #
-    # Callback to handle _entry_1 widget option -validatecommand
-    def _entry_1_validatecommand(self, *args):
-        pass
-
-    # _entry_1_xscrollcommand --
-    #
-    # Callback to handle _entry_1 widget option -xscrollcommand
-    def _entry_1_xscrollcommand(self, *args):
-        pass
-
-    # _entry_2_invalidcommand --
-    #
-    # Callback to handle _entry_2 widget option -invalidcommand
-    def _entry_2_invalidcommand(self, *args):
-        pass
-
-    # _entry_2_validatecommand --
-    #
-    # Callback to handle _entry_2 widget option -validatecommand
-    def _entry_2_validatecommand(self, *args):
-        pass
-
-    # _entry_2_xscrollcommand --
-    #
-    # Callback to handle _entry_2 widget option -xscrollcommand
-    def _entry_2_xscrollcommand(self, *args):
-        pass
-
-    # _text_2_xscrollcommand --
-    #
-    # Callback to handle _text_2 widget option -xscrollcommand
-    def _text_2_xscrollcommand(self, *args):
-        pass
-
-    # _text_2_yscrollcommand --
-    #
-    # Callback to handle _text_2 widget option -yscrollcommand
-    def _text_2_yscrollcommand(self, *args):
-        pass
-
-    # _text_3_xscrollcommand --
-    #
-    # Callback to handle _text_3 widget option -xscrollcommand
-    def _text_3_xscrollcommand(self, *args):
-        pass
-
-    # _text_3_yscrollcommand --
-    #
-    # Callback to handle _text_3 widget option -yscrollcommand
-    def _text_3_yscrollcommand(self, *args):
-        pass
-
-    # _radiobutton_1_command --
-    #
-    # Legacy command found in callback code. Add user comments inside body.
-    def _radiobutton_1_command(self, *args):
-        pass
-
-    # END CALLBACK CODE
-
-    # BEGIN USER CODE class
-
-    # END USER CODE class
-
+	def outbound_message_textbox_xscrollcommand(self, *args):
+		print(args)
+		
+	def outbound_message_textbox_yscrollcommand(self, *args):
+		print(args)
+		
+	def inbound_message_texbox_xscrollcommand(self, *args):
+		print(args)
+		
+	def inbound_message_texbox_yscrollcommand(self, *args):
+		print(args)
+		
+	def listening_checkbox_command(self, *args):
+		print(args)
+	
 def main():
     # Standalone Code Initialization
     # DO NOT EDIT
