@@ -253,8 +253,8 @@ class Base_GUI(object):
 		root.grid_rowconfigure(4, weight = 0, minsize = 21, pad = 0)
 		root.grid_rowconfigure(5, weight = 0, minsize = 30, pad = 0)
 		root.grid_rowconfigure(6, weight = 0, minsize = 2, pad = 0)
-		root.grid_columnconfigure(1, weight = 0, minsize = 538, pad = 0)
-		root.grid_columnconfigure(2, weight = 0, minsize = 538, pad = 0)
+		root.grid_columnconfigure(1, weight = 0, minsize = 200, pad = 0)
+		root.grid_columnconfigure(2, weight = 0, minsize = 200, pad = 0)
 
 
 
