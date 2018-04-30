@@ -66,6 +66,7 @@ class Base_GUI(object):
 		
 		self.user_ip_entry_field = Tkinter.Entry(root,
 			width = 0,
+			state = DISABLED,
 		)
 		
 		self.listening_checkbox = Tkinter.Checkbutton(root,
@@ -231,7 +232,7 @@ class Base_GUI(object):
 			padx = 0,
 			pady = 0,
 			rowspan = 1,
-			sticky = "ew"
+			sticky = "ew",
 		)
 		
 		self.listening_checkbox.grid(
