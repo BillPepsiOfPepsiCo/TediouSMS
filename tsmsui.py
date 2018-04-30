@@ -55,11 +55,13 @@ class Base_GUI(object):
 		self.outbound_message_textbox = Tkinter.Text(root,
 			height = 0,
 			width = 0,
+			state = DISABLED,
 		)
 				
-		self.inbound_message_texbox = Tkinter.Text(root,
+		self.inbound_message_textbox = Tkinter.Text(root,
 			height = 0,
 			width = 0,
+			state = DISABLED,
 		)
 		
 		self.user_ip_entry_field = Tkinter.Entry(root,
@@ -109,12 +111,12 @@ class Base_GUI(object):
 			yscrollcommand = self.outbound_message_textbox_yscrollcommand
 		)
 		
-		self.inbound_message_texbox.configure(
-			xscrollcommand = self.inbound_message_texbox_xscrollcommand
+		self.inbound_message_textbox.configure(
+			xscrollcommand = self.inbound_message_textbox_xscrollcommand
 		)
 		
-		self.inbound_message_texbox.configure(
-			yscrollcommand = self.inbound_message_texbox_yscrollcommand
+		self.inbound_message_textbox.configure(
+			yscrollcommand = self.inbound_message_textbox_yscrollcommand
 		)
 
 		self.listening_checkbox.configure(
@@ -206,7 +208,7 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = "news"
 		)
-		self.inbound_message_texbox.grid(
+		self.inbound_message_textbox.grid(
 			in_    = root,
 			column = 2,
 			row    = 2,
@@ -256,6 +258,52 @@ class Base_GUI(object):
 		root.grid_columnconfigure(1, weight = 0, minsize = 200, pad = 0)
 		root.grid_columnconfigure(2, weight = 0, minsize = 200, pad = 0)
 
+"""
+Text mutators.
+Automatically enables and disables text widgets to ensure they
+maintain state after editing is complete.
+"""
 
+#Clears the text of the specified tkinter text widget.
+def clear_text(widget):
+	read_only = check_state(widget)
+
+	if read_only:
+		widget.config(state = ENABLED)
+
+	widget.delete(0, END)
+
+	if read_only:
+		widget.config(state = DISABLED)
+
+#"Sets," i.e. clears the current text and then appends, the specified text
+#to the specified tkinter text widget.
+def set_text(widget, text):
+	read_only = check_state(widget)
+
+	if read_only:
+		widget.config(state = ENABLED)
+
+	clear_text(widget)
+	widget.insert(0, text)
+
+	if read_only:
+		widget.config(state = DISABLED)
+
+#Adds text to a tkinter text widget without removing any text beforehand.
+def append_text(widget, text, read_only):
+	read_only = check_state(widget)
+
+	if read_only:
+		widget.config(state = ENABLED)
+
+	widget.insert(INSERT, text)
+
+	if read_only:
+		widget.config(state = DISABLED)
+
+#Returns true if disabled, false if enabled.
+def check_state(widget):
+	return  widget["state"] == "disabled"
 
 

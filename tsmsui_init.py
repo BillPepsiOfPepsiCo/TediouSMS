@@ -10,7 +10,8 @@
 """
 
 from Tkinter import *
-from tsmsui import Base_GUI
+from tsmsui import Base_GUI, set_text, clear_text
+from socket import gethostbyname, gethostname
 
 # BEGIN USER CODE global
 
@@ -45,10 +46,10 @@ class CustomBase_GUI(Base_GUI):
 	def outbound_message_textbox_yscrollcommand(self, *args):
 		print(args)
 		
-	def inbound_message_texbox_xscrollcommand(self, *args):
+	def inbound_message_textbox_xscrollcommand(self, *args):
 		print(args)
 		
-	def inbound_message_texbox_yscrollcommand(self, *args):
+	def inbound_message_textbox_yscrollcommand(self, *args):
 		print(args)
 		
 	def listening_checkbox_command(self, *args):
@@ -65,6 +66,7 @@ def main():
     try: run()
     except NameError: pass
     root.protocol('WM_DELETE_WINDOW', root.quit)
+    set_text(demo.user_ip_entry_field, gethostbyname(gethostname()))
     root.mainloop()
 
 if __name__ == '__main__': main()
