@@ -24,14 +24,13 @@ class TelegraphKey(object):
 		self.pin = pin
 		
 	def key_string(self):
-                string = ""
-                i = 0
-		
-                while i < 20: #TODO figure out an exit condition
-                        i += 1
-                        string += self.key_character()
+		string = ""
 
-                return string
+		while i < 20: #TODO figure out an exit condition
+			i += 1
+			string += self.key_character()
+
+		return string
         
 
 	def key_character(self):
@@ -54,8 +53,8 @@ class TelegraphKey(object):
 		elif negative_unit > WORD_SPACE_LENGTH:
 			#Put a slash to denote a space between words
 			character += " / "
-
-                return character
+		
+		return character
 	
 	#Key a "positive" unit - i.e. a unit coded by the user pressing then releasing the button
 	#Used for everything besides unit measurements between letters and words.

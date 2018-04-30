@@ -10,13 +10,9 @@
 """
 
 from Tkinter import *
-from tsmsui import Base_GUI
+from tsmsui import TediouSMS_UI
 
-# BEGIN USER CODE global
-
-# END USER CODE global
-
-class CustomBase_GUI(Base_GUI):
+class TediouSMS_UI_Callback(TediouSMS_UI):
     
 	def on_send_button_clicked(self, *args):
 		print(args)
@@ -57,10 +53,8 @@ class CustomBase_GUI(Base_GUI):
 def main():
     # Standalone Code Initialization
     # DO NOT EDIT
-    try: userinit()
-    except NameError: pass
     root = Tk()
-    demo = CustomBase_GUI(root)
+    demo = TediouSMS_UI(root)
     root.title('tsmsui')
     try: run()
     except NameError: pass
