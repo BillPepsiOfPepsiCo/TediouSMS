@@ -8,9 +8,15 @@ The associated callback file should be modified instead.
 
 import Tkinter
 from Tkinter import *
-import os
+import os # needed for relative image paths
 
-class TediouSMS_UI(object):
+# Using new-style classes: create empty base class object
+# for compatibility with older python interps
+#if sys.version_info < (2, 2):
+#    class object:
+#        pass
+
+class Base_GUI(object):
 
 	_images = [] # Holds image refs to prevent GC
 	
@@ -66,7 +72,7 @@ class TediouSMS_UI(object):
 		)
 
 		# widget commands
-		
+
 		self.send_button.configure(
 			command = self.on_send_button_clicked
 		)
@@ -128,7 +134,6 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		
 		self.receiving_label.grid(
 			in_    = root,
 			column = 2,
@@ -141,7 +146,6 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		
 		self.send_button.grid(
 			in_    = root,
 			column = 1,
@@ -154,7 +158,6 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		
 		self.recipient_ip_entry_field.grid(
 			in_    = root,
 			column = 2,
@@ -167,7 +170,6 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = "ew"
 		)
-		
 		self.recipient_ip_address_label.grid(
 			in_    = root,
 			column = 2,
@@ -180,7 +182,6 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		
 		self.user_ip_address_label.grid(
 			in_    = root,
 			column = 1,
@@ -193,7 +194,6 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = ""
 		)
-		
 		self.outbound_message_textbox.grid(
 			in_    = root,
 			column = 1,
@@ -206,7 +206,6 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = "news"
 		)
-		
 		self.inbound_message_texbox.grid(
 			in_    = root,
 			column = 2,
@@ -245,6 +244,7 @@ class TediouSMS_UI(object):
 			rowspan = 1,
 			sticky = ""
 		)
+
 
 		# Resize Behavior
 		root.grid_rowconfigure(1, weight = 0, minsize = 40, pad = 0)
