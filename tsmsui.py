@@ -270,12 +270,12 @@ def clear_text(widget):
 	read_only = check_state(widget)
 
 	if read_only:
-		widget.config(state = ENABLED)
+		widget.config(state = "normal")
 
 	widget.delete(0, END)
 
 	if read_only:
-		widget.config(state = DISABLED)
+		widget.config(state = "readonly")
 
 #"Sets," i.e. clears the current text and then appends, the specified text
 #to the specified tkinter text widget.
@@ -283,25 +283,25 @@ def set_text(widget, text):
 	read_only = check_state(widget)
 
 	if read_only:
-		widget.config(state = ENABLED)
+		widget.config(state = "normal")
 
 	clear_text(widget)
 	widget.insert(0, text)
 
 	if read_only:
-		widget.config(state = DISABLED)
+		widget.config(state = "readonly")
 
 #Adds text to a tkinter text widget without removing any text beforehand.
 def append_text(widget, text, read_only):
 	read_only = check_state(widget)
 
 	if read_only:
-		widget.config(state = ENABLED)
+		widget.config(state = "normal")
 
 	widget.insert(INSERT, text)
 
 	if read_only:
-		widget.config(state = DISABLED)
+		widget.config(state = "readonly")
 
 #Returns true if disabled, false if enabled.
 def check_state(widget):

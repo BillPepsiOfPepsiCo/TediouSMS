@@ -27,9 +27,15 @@ class CustomBase_GUI(Base_GUI):
 		
 	def recipient_ip_entry_field_validatecommand(self, *args):
 		print(args)
-		
+	
+
+	valid_chars = range(0, 10) + ["."]
 	def recipient_ip_entry_field_xscrollcommand(self, *args):
-		print(args)
+		index = self.recipient_ip_entry_field.index(INSERT)
+
+		if index > 0:
+			new_char = self.recipient_ip_entry_field.get()[index - 1]
+			if 
 		
 	def user_ip_entry_field_invalidcommand(self, *args):
 		print(args)
