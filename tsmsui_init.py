@@ -62,7 +62,7 @@ def main():
     except NameError: pass
     root = Tk()
     demo = CustomBase_GUI(root)
-    root.title('tsmsui')
+    root.title('TediouSMS')
     try: run()
     except NameError: pass
     root.protocol('WM_DELETE_WINDOW', root.quit)
