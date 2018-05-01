@@ -59,13 +59,11 @@ class CustomBase_GUI(Base_GUI):
 	def listening_checkbox_command(self, *args):		
 			listening = bool(self.listening_var.get())
 			recipient_ip_address = self.recipient_ip_entry_field.get()
-			print(recipient_ip_address)
-			print("Listening => %s" % listening)
 			
 			if listening:
-				#Start a server/client
+				pass #Start a server/client
 			else:
-				#Disable server/client
+				pass #Disable server/client
 	
 def main():
     # Standalone Code Initialization
