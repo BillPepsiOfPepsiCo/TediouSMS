@@ -10,5 +10,3 @@ Simultaneous messaging over IP with morse code messages
 Python 3.6
 
 websockets 4.0
-
-https://github.com/dpallot/simple-websocket-server.git
