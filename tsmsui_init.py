@@ -12,6 +12,7 @@
 from Tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
+from telesocket import get_user_ip_address
 
 # BEGIN USER CODE global
 
@@ -57,7 +58,14 @@ class CustomBase_GUI(Base_GUI):
 		
 	def listening_checkbox_command(self, *args):		
 			listening = bool(self.listening_var.get())
+			recipient_ip_address = self.recipient_ip_entry_field.get()
+			print(recipient_ip_address)
 			print("Listening => %s" % listening)
+			
+			if listening:
+				#Start a server/client
+			else:
+				#Disable server/client
 	
 def main():
     # Standalone Code Initialization
@@ -70,7 +78,7 @@ def main():
     try: run()
     except NameError: pass
     root.protocol('WM_DELETE_WINDOW', root.quit)
-    set_text(demo.user_ip_entry_field, gethostbyname(gethostname()))
+    set_text(demo.user_ip_entry_field, get_user_ip_address())
     root.mainloop()
 
 if __name__ == '__main__': main()
