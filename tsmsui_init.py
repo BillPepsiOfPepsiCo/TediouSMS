@@ -9,7 +9,7 @@
  The 'main' function is reserved.
 """
 
-from Tkinter import *
+from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
 from telesocket import get_user_ip_address
@@ -28,10 +28,7 @@ class CustomBase_GUI(Base_GUI):
 		
 	def recipient_ip_entry_field_validatecommand(self, *args):
 		print(args)
-	
-
-	valid_chars = map(lambda n: str(n), range(0, 10)) + ["."]
-	
+		
 	def recipient_ip_entry_field_xscrollcommand(self, *args):
 		pass
 		
@@ -66,17 +63,18 @@ class CustomBase_GUI(Base_GUI):
 				pass #Disable server/client
 	
 def main():
-    # Standalone Code Initialization
-    # DO NOT EDIT
-    try: userinit()
-    except NameError: pass
-    root = Tk()
-    demo = CustomBase_GUI(root)
-    root.title('TediouSMS')
-    try: run()
-    except NameError: pass
-    root.protocol('WM_DELETE_WINDOW', root.quit)
-    set_text(demo.user_ip_entry_field, get_user_ip_address())
-    root.mainloop()
+	# Standalone Code Initialization
+	# DO NOT EDIT
+	try: userinit()
+	except NameError: pass
+	root = Tk()
+	demo = CustomBase_GUI(root)
+	root.title('TediouSMS')
+	try: run()
+	except NameError: pass
+	root.protocol('WM_DELETE_WINDOW', root.quit)
+	set_text(demo.user_ip_entry_field, get_user_ip_address())
+	root.mainloop()
+
 
 if __name__ == '__main__': main()
