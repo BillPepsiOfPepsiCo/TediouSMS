@@ -1,7 +1,6 @@
-import asyncio
-import socket
 from socket import gethostbyname, gethostname
-
+import asyncio
+import websockets
 
 class Telesocket(object):
 
@@ -11,35 +10,37 @@ class Telesocket(object):
 		self._recipient_ip = recipient_ip
 		self._recipient_port = recipient_port
 		
-	async def initialize_server(self):
-		print("Initializing TediouSMS listener on %s" % self.host_ws_url())
+	async def listen(self, websocket, path):
+		async for message in websocket:
+			consume_message(message)
+				
+	def consume_message(self, message):
+		print("Consuming message => " + message)
+	
+	def serve(self):
+		print("")
+		asyncio.get_event_loop().run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
+		asyncio.get_event_loop().run_forever()
 		
+	async def connect_and_send(self, message):
 		try:
-			start_server = websockets.serve(recieve_message, self.host_ip, self.host_port)
-			asyncio.get_event_loop().run_until_complete(start_server)
-			asyncio.get_event_loop().run_forever()
-		except Exception as ex:
-			print("An error occurred while trying to initialize a TediouSMS listener on %s: " % self.host_ws_url())
-			print(ex.args)
-		
-	async def close_server(self):
-		print("Closing TediouSMS listener on %s" % self.host_ws_url())
-		asyncio.get_event_loop().close()
-		
-	async def send_message(self, message):
-		async with websockets.connect(self.client_ws_url()) as websocket:
-			message = "_______"
-			await websocket.send(message)
+			async with websockets.connect(self.client_uri()) as websocket:
+				await websocket.send(message)
+		except Exception as e:
+			print("An exception occurred while trying to establish a connection and send a message: ")
+			print(e.args)
 	
-	async def recieve_message(self, websocket, path):
-		message = await websocket.recv()
-		return message
+	def send_message(self, message):
+		asyncio.get_event_loop().run_until_complete(self.connect_and_send(message))
 	
-	def host_ws_url(self):
-		return "ws://%s:%s" % (self.host_ip, self.host_port)
+	def host_uri(self):
+		return self.uri(self.host_ip, self.host_port)
 		
-	def client_ws_url(self):
-		return "ws://%s:%s" % (self.recipient_ip, self.recipient_port)
+	def client_uri(self):
+		return self.uri(self.recipient_ip, self.recipient_port)
+		
+	def uri(self, ip, port):
+		return "ws://%s:%s" % (ip, port)
 	
 	@property
 	def host_ip(self):
