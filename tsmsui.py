@@ -22,6 +22,9 @@ class Base_GUI(object):
 	
 	def __init__(self, root):
 
+		#The IntVar the Checkbutton writes its state to.
+		self.listening_var = IntVar()
+		
 		# Widget Initialization
 		self.sending_label = Tkinter.Label(root,
 			font = "{MS Sans Serif} 14 bold",
@@ -72,6 +75,7 @@ class Base_GUI(object):
 		self.listening_checkbox = Tkinter.Checkbutton(root,
 			font = "{MS Sans Serif} 12 bold",
 			text = "Listening on IP",
+			variable = self.listening_var,
 		)
 
 		# widget commands

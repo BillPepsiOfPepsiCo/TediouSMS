@@ -29,13 +29,10 @@ class CustomBase_GUI(Base_GUI):
 		print(args)
 	
 
-	valid_chars = range(0, 10) + ["."]
+	valid_chars = map(lambda n: str(n), range(0, 10)) + ["."]
+	
 	def recipient_ip_entry_field_xscrollcommand(self, *args):
-		index = self.recipient_ip_entry_field.index(INSERT)
-
-		if index > 0:
-			new_char = self.recipient_ip_entry_field.get()[index - 1]
-			if 
+		pass
 		
 	def user_ip_entry_field_invalidcommand(self, *args):
 		print(args)
@@ -58,8 +55,9 @@ class CustomBase_GUI(Base_GUI):
 	def inbound_message_textbox_yscrollcommand(self, *args):
 		print(args)
 		
-	def listening_checkbox_command(self, *args):
-		print(args)
+	def listening_checkbox_command(self, *args):		
+			listening = bool(self.listening_var.get())
+			print("Listening => %s" % listening)
 	
 def main():
     # Standalone Code Initialization
