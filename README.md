@@ -1,11 +1,11 @@
 # TediouSMS
 Probably the least intuitive simultaneous messaging service ever created.
 
-#Planned features:
+# Planned features:
 
 Simultaneous messaging over IP with morse code messages
 
-#Dependencies:
+# Dependencies:
 
 Python 3.6
 
