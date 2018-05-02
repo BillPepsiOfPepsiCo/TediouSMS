@@ -32,24 +32,24 @@ class Telesocket(object):
 	"""
 	def begin_listening(self):
 		print("Internet connection found, launching server")
-			asyncio.set_event_loop(self._loop)
-			self._loop.run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
-			print("Telesocket server listening on", self.host_uri())
-			self._loop.run_forever()
+		asyncio.set_event_loop(self._loop)
+		self._loop.run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
+		print("Telesocket server listening on", self.host_uri())
+		self._loop.run_forever()
 	
 	"""
 	The asynchronous function that handles the actual websocket listening and thread monitoring.
 	Also handles closing the thread.
 	"""
 	async def listen(self, websocket, path):
-		if getattr(self._server_thread, "do_run", True):
+		if getattr(self._server_thread, "do_run"):
 			async for message in websocket:
 				try:
 					self._message_consumer(message)
 				except TypeError:
 					raise TypeError("The message consumer (%s) for your Telesocket takes too many or too few arguments. (Should be 1)" % str(self._message_consumer))
 		else:
-			return
+			
 		
 	"""
 	Creates a new daemon thread that listens on the specified host_ip and host_port.
@@ -61,7 +61,7 @@ class Telesocket(object):
 			self._server_thread = Thread(target = self.begin_listening, daemon = True)
 			self._server_thread.do_run = True
 		
-		if self._server_thread.isAlive():
+		if self.server_running():
 			print("Server thread start attempted but it\'s running already, ignoring")
 		else:
 			print("Starting server thread")
@@ -72,9 +72,10 @@ class Telesocket(object):
 	just a listener that calls a synchronous function. 
 	"""
 	def stop_server_thread(self):		
-		if self._server_thread.isAlive():
+		if self.server_running():
 			print("Stopping server thread")
 			self._server_thread.do_run = False
+			self._loop.stop()
 		else:
 			print("Server thread exit attempted but it\'s not running, ignoring")
 	
@@ -147,6 +148,16 @@ class Telesocket(object):
 	def recipient_port(self):
 		return self._recipient_port
 
+"""
+An easy, but expensive, way to check if the provided IP address is valid.
+"""
+def is_valid_ip(ip_address):
+	try:
+		socket.inet_aton(ip_address)
+		return True
+	except socket.error:
+		return False
+
 #Returns true if Google's DNS is successfully reached and False otherwise.
 #A good indicator of whether or not the user is connected to a network.
 def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 3):
@@ -158,11 +169,6 @@ def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 3):
 		print("User does not appear to be connected to a network (DNS at 8.8.8.8:53 timed out after 3s)")
 		print(ex.args)
 		return False
-
-#Returns if the specified string is a valid IP address (including 'localhost')
-def verify_ip_address(ip_address):
-	substring = ip_address.split(":")[0]
-	
 	
 #Returns the user's current IP address
 #returns None if the user is not connected to a network
