@@ -67,11 +67,7 @@ class CustomBase_GUI(Base_GUI):
 				
 				if user_connected_to_network():
 					print("Initializing Telesocket(TM)")
-					
-					#Only create a new Telesocket instance if one hasn't been created or the recipient changed
-					if self._telesocket == None or not (self._telesocket.recipient_ip == client_ip):
-						self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)
-					
+					self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)					
 					self._telesocket.start_server_thread()
 				else:
 					print("Could not listen: user not connected to the Internet")
