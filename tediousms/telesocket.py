@@ -10,9 +10,9 @@ class Telesocket(object):
 
 	"""
 	Creates a new instance of the super intuitive Telesocket.
-	host_ip (str) => a valid IPV6 address that the server will be listening on (the IP the machine this is running on is). See Telesocket.get_user_ip_address()
+	host_ip (str) => a valid IPV4 address that the server will be listening on (the IP the machine this is running on is). See Telesocket.get_user_ip_address()
 	host_port (int) => the port the server will listen on.
-	recipient_ip (str) => a valid IPV6 address that send_message calls will attempt to connect and send a message to.
+	recipient_ip (str) => a valid IPV4 address that send_message calls will attempt to connect and send a message to.
 	recipient_port (int) => the port the recipient is listening on.
 	message_consumer (function) => a function that's called each time the server recieves a message. Called with 1 parameter, a str (the message).
 	"""
@@ -149,6 +149,8 @@ class Telesocket(object):
 
 """
 An easy, but expensive, way to check if the provided IP address is valid.
+This check is actually so good that testing became annoying since
+it actually ensures the IP is in the valid range of IPV4 addresses.
 """
 def is_valid_ip(ip_address):
 	try:
