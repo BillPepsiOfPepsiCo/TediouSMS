@@ -31,16 +31,11 @@ class Telesocket(object):
 	on its own thread, see Telesocket.start_server_thread()
 	"""
 	def begin_listening(self):
-		print("Checking for Internet connection")
-		
-		if user_connected_to_network():
-			print("Internet connection found, launching server")
+		print("Internet connection found, launching server")
 			asyncio.set_event_loop(self._loop)
 			self._loop.run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
 			print("Telesocket server listening on", self.host_uri())
 			self._loop.run_forever()
-		else:
-			print("No Internet connection found. Server will NOT start.")
 	
 	"""
 	The asynchronous function that handles the actual websocket listening and thread monitoring.
