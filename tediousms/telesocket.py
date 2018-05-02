@@ -1,3 +1,4 @@
+import socket
 from socket import gethostbyname, gethostname
 from threading import Thread
 import asyncio
@@ -21,6 +22,8 @@ class Telesocket(object):
 		self._message_consumer = message_consumer
 		self._server_thread = None
 		self._loop = asyncio.new_event_loop()
+
+		print("Telesocket initialized (host: %s client: %s)" % (self.host_uri(), self.client_uri()))
 	
 	"""
 	Launches a server that listens on the specified host_ip and host_port.
@@ -28,10 +31,16 @@ class Telesocket(object):
 	on its own thread, see Telesocket.start_server_thread()
 	"""
 	def begin_listening(self):
-		print("TesiouSMS server listening on", self.host_uri())
-		asyncio.set_event_loop(self._loop)
-		self._loop.run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
-		self._loop.run_forever()
+		print("Checking for Internet connection")
+		
+		if user_connected_to_network():
+			print("Internet connection found, launching server")
+			asyncio.set_event_loop(self._loop)
+			self._loop.run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
+			print("Telesocket server listening on", self.host_uri())
+			self._loop.run_forever()
+		else:
+			print("No Internet connection found. Server will NOT start.")
 	
 	"""
 	The asynchronous function that handles the actual websocket listening and thread monitoring.
@@ -106,9 +115,26 @@ class Telesocket(object):
 	"""
 	def client_uri(self):
 		return self.uri(self.recipient_ip, self.recipient_port)
-		
+	
+	"""
+	The URI function used in creating URIs. 
+	"""
 	def uri(self, ip, port):
 		return "ws://%s:%s" % (ip, port)
+	
+	"""
+	Returns true if the server thread is alive,
+	false if it hasn't been initialized or if it's dead.
+	"""
+	def server_running(self):
+		if self._server_thread == None:
+			return False
+		else:
+			return self._server_thread.is_alive()
+	
+	"""
+	Accessors / mutators
+	"""
 	
 	@property
 	def host_ip(self):
@@ -135,7 +161,7 @@ def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 3):
 		return True
 	except Exception as ex:
 		print("User does not appear to be connected to a network (DNS at 8.8.8.8:53 timed out after 3s)")
-		print(ex.message)
+		print(ex.args)
 		return False
 
 #Returns if the specified string is a valid IP address (including 'localhost')

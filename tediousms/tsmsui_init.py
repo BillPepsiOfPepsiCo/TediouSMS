@@ -12,7 +12,7 @@
 from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
-from telesocket import get_user_ip_address
+from telesocket import Telesocket
 
 # BEGIN USER CODE global
 
@@ -28,9 +28,17 @@ class CustomBase_GUI(Base_GUI):
 		
 	def recipient_ip_entry_field_validatecommand(self, *args):
 		print(args)
-		
+	
+
+	valid_chars = [range(0, 10)] + ["."]
 	def recipient_ip_entry_field_xscrollcommand(self, *args):
-		pass
+		index = self.recipient_ip_entry_field.index(INSERT)
+
+		if index > 0:
+			new_char = self.recipient_ip_entry_field.get()[index - 1]
+			print(new_char + " => " + str(type(new_char)))
+			if str(new_char) in self.valid_chars:
+				print("VALID CHAR")
 		
 	def user_ip_entry_field_invalidcommand(self, *args):
 		print(args)
@@ -53,28 +61,24 @@ class CustomBase_GUI(Base_GUI):
 	def inbound_message_textbox_yscrollcommand(self, *args):
 		print(args)
 		
-	def listening_checkbox_command(self, *args):		
-			listening = bool(self.listening_var.get())
-			recipient_ip_address = self.recipient_ip_entry_field.get()
-			
-			if listening:
-				pass #Start a server/client
-			else:
-				pass #Disable server/client
+	def listening_checkbox_command(self, *args):
+		print(self.listening_checkbox_value.get())
 	
 def main():
-	# Standalone Code Initialization
-	# DO NOT EDIT
-	try: userinit()
-	except NameError: pass
 	root = Tk()
 	demo = CustomBase_GUI(root)
+	
+	#Initialize the checkbox so we can read its value
+	#This is super weird and overly complicated because
+	#it has to come after the Tk() call unless you're on python 2
+	demo.listening_checkbox_value = IntVar()
+	demo.listening_checkbox.configure(variable = demo.listening_checkbox_value)
+	
 	root.title('TediouSMS')
 	try: run()
 	except NameError: pass
 	root.protocol('WM_DELETE_WINDOW', root.quit)
-	set_text(demo.user_ip_entry_field, get_user_ip_address())
+	set_text(demo.user_ip_entry_field, gethostbyname(gethostname()))
 	root.mainloop()
-
 
 if __name__ == '__main__': main()
