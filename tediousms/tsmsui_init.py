@@ -50,8 +50,10 @@ class CustomBase_GUI(Base_GUI):
 	def listening_checkbox_command(self, *args):
 		if self.listening_checkbox_value.get():
 			#If checkbox is unchecked
+			pass
 		else:
 			#If the checkbox is checked
+			pass
 	
 def main():
 	root = Tk()
