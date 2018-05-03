@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-import time
+import time, numpy, pygame.sndarray
 
 #Class that handles the keying of characters
 
@@ -25,10 +25,10 @@ class TelegraphKey(object):
 		self.input_pin = input_pin
 		self.signal_pin = signal_pin
 		self._listener_thread = Thread(self.poll_and_toggle_recording)
+		self._750_Hz_tone = None
 		
 		self.setup_gpio(self.input_pin, self.signal_pin)
 		self._listener_thread.start()
-	
 	"""
 	Sets up the GPIO pins passed to the constructor.
 	Also sets the pin numbering sceme to Broadcom mode.
@@ -59,7 +59,21 @@ class TelegraphKey(object):
 			if button_pressed:
 				RECORDING = not RECORDING
 				time.sleep(1)
-							
+	
+	"""
+	Call this method to initialize the 750 Hz tone and play it when the button's pressed.
+	Without calling this the button will not play a sound.
+	"""
+	def init_sounds(self):
+		sample_rate = 44100
+		frequency = 750 #Hz
+		
+		period = int(round(sample_rate / frequency))
+		pygame.mixer.pre_init(sample_rate, -16, 1)
+		pygame.init()
+		
+		arr = array("h", [0] * period)
+		self._750_Hz_tone = pygame.snd_array.make_sound(arr)
 	
 	"""
 	Begins keying a string. Returns the string when the
@@ -76,7 +90,14 @@ class TelegraphKey(object):
 
 	def key_character(self):
 		character = ""
+		
+		if self._750_Hz_tone is not None:
+			self._750_Hz_tone.play(-1)
+			
 		unit = self.key_unit_positive()
+		
+		if self._750_Hz_tone is not None:
+			self._750_Hz_tone.stop()
 
 		if unit > UNIT_LENGTH and unit < DASH_LENGTH:
 			character += "."
