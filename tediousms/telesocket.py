@@ -51,7 +51,7 @@ class Telesocket(object):
 			
 			#This is where the websocket binds to the host_ip. Since websockets abstracts the usual
 			#low-level socket API, I can't directly tell the socket API to allow address reuse,
-			#so, instead, the Telesocket will simply not try to bind to the IP address if the current host_ip
+			#so, instead, the Telesocket will simply not try to bind to the IP address if the specified host_ip
 			#is the last address the websocket bound to.
 			if PREVIOUS_SERVER_ADDRESS is None or not (PREVIOUS_SERVER_ADDRESS == self.host_ip):
 				self._loop.run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
@@ -74,6 +74,10 @@ class Telesocket(object):
 			print("Stopping server thread")
 			self._loop.call_soon_threadsafe(self._loop.stop)
 			self._server_thread.join()
+			#It looks strange, but this is actually the easiest way to do it,
+			#since the start_server_thread function makes a new Thread instance
+			#if the server thread is None, and threads that are finished/canceled
+			#cannot be started again.
 			self._server_thread = None
 		else:
 			print("Server thread exit attempted but it\'s not running, ignoring")

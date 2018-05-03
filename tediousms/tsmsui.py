@@ -23,6 +23,7 @@ class Base_GUI(object):
 		self.send_button = Tkinter.Button(root,
 			font = "{MS Sans Serif} 14 bold",
 			text = "SEND",
+			state = "disabled",
 		)
 		
 		self.recipient_ip_entry_field = Tkinter.Entry(root,

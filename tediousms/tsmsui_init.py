@@ -14,7 +14,10 @@ class CustomBase_GUI(Base_GUI):
 		self._telesocket = None
 		
 	def on_send_button_clicked(self, *args):
-		print(args)
+		text = self.outbound_message_textbox.get()
+		
+		if len(text) > 0:
+			self._telesocket.connect_and_send(self.outbound_message_textbox.get())
 		
 	def recipient_ip_entry_field_invalidcommand(self, *args):
 		print(args)
@@ -42,7 +45,7 @@ class CustomBase_GUI(Base_GUI):
 		print(args)
 		
 	def user_ip_entry_field_xscrollcommand(self, *args):
-		print(args)
+		pass
 
 	def outbound_message_textbox_xscrollcommand(self, *args):
 		print(args)
@@ -67,8 +70,10 @@ class CustomBase_GUI(Base_GUI):
 				
 				if user_connected_to_network():
 					print("Initializing Telesocket(TM)")
-					self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)					
+					self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)				
 					self._telesocket.start_server_thread()
+					self.send_button.configure(state = "normal")
+					self.recipient_ip_entry_field.configure(state = "readonly")
 				else:
 					print("Could not listen: user not connected to the Internet")
 					self.listening_checkbox_value.set(0)
@@ -80,6 +85,8 @@ class CustomBase_GUI(Base_GUI):
 			if self._telesocket is not None and self._telesocket.server_running():
 				print("Plugging ears")
 				self._telesocket.stop_server_thread()
+				self.send_button.configure(state = "disabled")
+				self.recipient_ip_entry_field.configure(state = "normal")
 			
 	def listen_fail(self):
 		self.listening_checkbox_value.set(0)

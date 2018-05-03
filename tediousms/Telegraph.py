@@ -19,9 +19,16 @@ DASH = '-'
 
 class TelegraphKey(object):
 
-	#pin -> the pin the button runs to to provide output.
-	def __init__(self, pin):
-		self.pin = pin
+	def __init__(self, input_pin, signal_pin):
+		self.input_pin = input_pin
+		self.signal_pin = signal_pin
+		self._listener_thread = Thread(self.begin_recording_message)
+		
+	def begin_recording_message(self):
+		while True:
+			#Listen for a high voltage on the signal pin
+			#Begin keying the input until the signal pin recieves another high voltage
+			pass
 		
 	def key_string(self, predicate):
 		string = ""
@@ -59,14 +66,14 @@ class TelegraphKey(object):
 	#Used for everything besides unit measurements between letters and words.
 	def key_unit_positive(self):
 		#Hang until the button is pressed
-		while not GPIO.input(self.pin):
+		while not GPIO.input(self.input_pin):
 			pass
 		
 		#Record the start time
 		start = time.time()
 		
 		#Hang until button is released
-		while GPIO.input(self.pin):
+		while GPIO.input(self.input_pin):
 			pass
 		
 		#Return elapsed time
@@ -81,7 +88,7 @@ class TelegraphKey(object):
 		start = time.time()
 		
 		#Hang until button is pushed
-		while not GPIO.input(self.pin):
+		while not GPIO.input(self.input_pin):
 			pass
 		
 		#Return elapsed time
