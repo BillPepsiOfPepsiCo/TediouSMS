@@ -2,6 +2,7 @@ from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
 from telesocket import *
+import asyncio
 
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
 
@@ -14,10 +15,10 @@ class CustomBase_GUI(Base_GUI):
 		self._telesocket = None
 		
 	def on_send_button_clicked(self, *args):
-		text = self.outbound_message_textbox.get()
+		text = self.outbound_message_textbox.get("1.0", END)
 		
 		if len(text) > 0:
-			self._telesocket.connect_and_send(self.outbound_message_textbox.get())
+			asyncio.get_event_loop().run_until_complete(self._telesocket.connect_and_send(text))
 		
 	def recipient_ip_entry_field_invalidcommand(self, *args):
 		print(args)
@@ -25,17 +26,7 @@ class CustomBase_GUI(Base_GUI):
 	def recipient_ip_entry_field_validatecommand(self, *args):
 		print(args)
 	
-
-	valid_chars = [range(0, 10)] + ["."]
 	def recipient_ip_entry_field_xscrollcommand(self, *args):
-		"""index = self.recipient_ip_entry_field.index(INSERT)
-
-		if index > 0:
-			new_char = self.recipient_ip_entry_field.get()[index - 1]
-			print(new_char + " => " + str(type(new_char)))
-			if str(new_char) in self.valid_chars:
-				print("VALID CHAR")"""
-		
 		pass
 		
 	def user_ip_entry_field_invalidcommand(self, *args):

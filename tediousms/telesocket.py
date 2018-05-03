@@ -51,6 +51,7 @@ class Telesocket(object):
 		self._message_consumer = message_consumer
 		self._server_thread = None
 		self._loop = asyncio.new_event_loop()
+		asyncio.set_event_loop(self._loop)
 
 		print("Telesocket initialized (host: %s client: %s)" % (self.host_uri(), self.client_uri()))
 	
@@ -74,7 +75,6 @@ class Telesocket(object):
 		
 		if self._server_thread == None:
 			print("Creating server thread")
-			asyncio.set_event_loop(self._loop)
 			
 			#This is where the websocket binds to the host_ip. Since websockets abstracts the usual
 			#low-level socket API, I can't directly tell the socket API to allow address reuse,
