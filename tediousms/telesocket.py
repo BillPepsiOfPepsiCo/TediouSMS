@@ -6,6 +6,33 @@ import websockets
 
 PREVIOUS_SERVER_ADDRESS = None
 
+###################################################################
+"""
+Dear Dr. Cherry,
+
+Hello. I'm sure you're looking at the final version of this file,
+ignorant of the blood, sweat, tears, and StackOverflow queries that
+went into creating this behemoth of behavior that required
+an asynchronous task to run on its own thread that must be able
+to be canceled at any time.
+In python, async wasn't even a full-fledged thing until python 3,
+so I had to learn everything about python's hilariously inadequate and
+confusing version of async. Then, I had to learn how to get an async
+event loop to run on its own thread. Then, I had to learn how to
+ensure the thread could exit on its own whenever I wanted. That...
+...was really, really hard. Probably took me longer than learning
+how to use websockets. Now, why did I write this long-winded paragraph
+in a random supporting file of my magnificently unintuitive SMS client?
+Why did I decide to address you directly at the top of a random module
+that plays a core role in allowing this program to communicate
+over a network connection?
+
+I'd just like some cool guy points.
+
+Thanks,
+Brennan
+"""
+###################################################################
 class Telesocket(object):
 
 	"""
