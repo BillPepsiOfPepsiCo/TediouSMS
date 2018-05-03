@@ -6,6 +6,33 @@ import websockets
 
 PREVIOUS_SERVER_ADDRESS = None
 
+###################################################################
+"""
+Dear Dr. Cherry,
+
+Hello. I'm sure you're looking at the final version of this file,
+ignorant of the blood, sweat, tears, and StackOverflow queries that
+went into creating this behemoth of behavior that required
+an asynchronous task to run on its own thread that must be able
+to be canceled at any time.
+In python, async wasn't even a full-fledged thing until python 3,
+so I had to learn everything about python's hilariously inadequate and
+confusing version of async. Then, I had to learn how to get an async
+event loop to run on its own thread. Then, I had to learn how to
+ensure the thread could exit on its own whenever I wanted. That...
+...was really, really hard. Probably took me longer than learning
+how to use websockets. Now, why did I write this long-winded paragraph
+in a random supporting file of my magnificently unintuitive SMS client?
+Why did I decide to address you directly at the top of a random module
+that plays a core role in allowing this program to communicate
+over a network connection?
+
+I'd just like some cool guy points.
+
+Thanks,
+Brennan
+"""
+###################################################################
 class Telesocket(object):
 
 	"""
@@ -24,6 +51,7 @@ class Telesocket(object):
 		self._message_consumer = message_consumer
 		self._server_thread = None
 		self._loop = asyncio.new_event_loop()
+		asyncio.set_event_loop(self._loop)
 
 		print("Telesocket initialized (host: %s client: %s)" % (self.host_uri(), self.client_uri()))
 	
@@ -47,11 +75,10 @@ class Telesocket(object):
 		
 		if self._server_thread == None:
 			print("Creating server thread")
-			asyncio.set_event_loop(self._loop)
 			
 			#This is where the websocket binds to the host_ip. Since websockets abstracts the usual
 			#low-level socket API, I can't directly tell the socket API to allow address reuse,
-			#so, instead, the Telesocket will simply not try to bind to the IP address if the current host_ip
+			#so, instead, the Telesocket will simply not try to bind to the IP address if the specified host_ip
 			#is the last address the websocket bound to.
 			if PREVIOUS_SERVER_ADDRESS is None or not (PREVIOUS_SERVER_ADDRESS == self.host_ip):
 				self._loop.run_until_complete(websockets.serve(self.listen, self.host_ip, self.host_port))
@@ -74,6 +101,10 @@ class Telesocket(object):
 			print("Stopping server thread")
 			self._loop.call_soon_threadsafe(self._loop.stop)
 			self._server_thread.join()
+			#It looks strange, but this is actually the easiest way to do it,
+			#since the start_server_thread function makes a new Thread instance
+			#if the server thread is None, and threads that are finished/canceled
+			#cannot be started again.
 			self._server_thread = None
 		else:
 			print("Server thread exit attempted but it\'s not running, ignoring")

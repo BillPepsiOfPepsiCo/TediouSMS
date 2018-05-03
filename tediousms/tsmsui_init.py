@@ -2,19 +2,23 @@ from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
 from telesocket import *
+import asyncio
 
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
 
 DEFAULT_PORT = 42069 #nice meme
 
 class CustomBase_GUI(Base_GUI):
-    
+	
 	def __init__(self, root):
 		Base_GUI.__init__(self, root)
 		self._telesocket = None
 		
 	def on_send_button_clicked(self, *args):
-		print(args)
+		text = self.outbound_message_textbox.get("1.0", END)
+		
+		if len(text) > 0:
+			asyncio.get_event_loop().run_until_complete(self._telesocket.connect_and_send(text))
 		
 	def recipient_ip_entry_field_invalidcommand(self, *args):
 		print(args)
@@ -22,17 +26,7 @@ class CustomBase_GUI(Base_GUI):
 	def recipient_ip_entry_field_validatecommand(self, *args):
 		print(args)
 	
-
-	valid_chars = [range(0, 10)] + ["."]
 	def recipient_ip_entry_field_xscrollcommand(self, *args):
-		"""index = self.recipient_ip_entry_field.index(INSERT)
-
-		if index > 0:
-			new_char = self.recipient_ip_entry_field.get()[index - 1]
-			print(new_char + " => " + str(type(new_char)))
-			if str(new_char) in self.valid_chars:
-				print("VALID CHAR")"""
-		
 		pass
 		
 	def user_ip_entry_field_invalidcommand(self, *args):
@@ -42,7 +36,7 @@ class CustomBase_GUI(Base_GUI):
 		print(args)
 		
 	def user_ip_entry_field_xscrollcommand(self, *args):
-		print(args)
+		pass
 
 	def outbound_message_textbox_xscrollcommand(self, *args):
 		print(args)
@@ -67,8 +61,10 @@ class CustomBase_GUI(Base_GUI):
 				
 				if user_connected_to_network():
 					print("Initializing Telesocket(TM)")
-					self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)					
+					self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)				
 					self._telesocket.start_server_thread()
+					self.send_button.configure(state = "normal")
+					self.recipient_ip_entry_field.configure(state = "readonly")
 				else:
 					print("Could not listen: user not connected to the Internet")
 					self.listening_checkbox_value.set(0)
@@ -80,6 +76,8 @@ class CustomBase_GUI(Base_GUI):
 			if self._telesocket is not None and self._telesocket.server_running():
 				print("Plugging ears")
 				self._telesocket.stop_server_thread()
+				self.send_button.configure(state = "disabled")
+				self.recipient_ip_entry_field.configure(state = "normal")
 			
 	def listen_fail(self):
 		self.listening_checkbox_value.set(0)

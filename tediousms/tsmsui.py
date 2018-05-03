@@ -23,6 +23,7 @@ class Base_GUI(object):
 		self.send_button = Tkinter.Button(root,
 			font = "{MS Sans Serif} 14 bold",
 			text = "SEND",
+			state = "disabled",
 		)
 		
 		self.recipient_ip_entry_field = Tkinter.Entry(root,
@@ -113,9 +114,9 @@ class Base_GUI(object):
 		
 		# Geometry Management
 		self.sending_label.grid(
-			in_    = root,
+			in_	   = root,
 			column = 1,
-			row    = 1,
+			row	   = 1,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -124,10 +125,11 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
+		
 		self.receiving_label.grid(
-			in_    = root,
+			in_	   = root,
 			column = 2,
-			row    = 1,
+			row	   = 1,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -136,10 +138,11 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
+		
 		self.send_button.grid(
-			in_    = root,
+			in_	   = root,
 			column = 1,
-			row    = 3,
+			row	   = 3,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -148,10 +151,11 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
+		
 		self.recipient_ip_entry_field.grid(
-			in_    = root,
+			in_	   = root,
 			column = 2,
-			row    = 5,
+			row	   = 5,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -160,10 +164,11 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = "ew"
 		)
+		
 		self.recipient_ip_address_label.grid(
-			in_    = root,
+			in_	   = root,
 			column = 2,
-			row    = 4,
+			row	   = 4,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -172,10 +177,11 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
+		
 		self.user_ip_address_label.grid(
-			in_    = root,
+			in_	   = root,
 			column = 1,
-			row    = 4,
+			row	   = 4,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -184,10 +190,11 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = ""
 		)
+		
 		self.outbound_message_textbox.grid(
-			in_    = root,
+			in_	   = root,
 			column = 1,
-			row    = 2,
+			row	   = 2,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -196,10 +203,11 @@ class Base_GUI(object):
 			rowspan = 1,
 			sticky = "news"
 		)
+		
 		self.inbound_message_textbox.grid(
-			in_    = root,
+			in_	   = root,
 			column = 2,
-			row    = 2,
+			row	   = 2,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -210,9 +218,9 @@ class Base_GUI(object):
 		)
 		
 		self.user_ip_entry_field.grid(
-			in_    = root,
+			in_	   = root,
 			column = 1,
-			row    = 5,
+			row	   = 5,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -223,9 +231,9 @@ class Base_GUI(object):
 		)
 		
 		self.listening_checkbox.grid(
-			in_    = root,
+			in_	   = root,
 			column = 2,
-			row    = 3,
+			row	   = 3,
 			columnspan = 1,
 			ipadx = 0,
 			ipady = 0,
@@ -292,6 +300,6 @@ def append_text(widget, text, read_only):
 
 #Returns true if disabled, false if enabled.
 def check_state(widget):
-	return  widget["state"] == "disabled"
+	return	widget["state"] == "disabled"
 
 
