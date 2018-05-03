@@ -8,7 +8,7 @@ from telesocket import *
 DEFAULT_PORT = 42069 #nice meme
 
 class CustomBase_GUI(Base_GUI):
-    
+	
 	def __init__(self, root):
 		Base_GUI.__init__(self, root)
 		self._telesocket = None

@@ -26,7 +26,7 @@ class TelegraphKey(object):
 		self.signal_pin = signal_pin
 		self._listener_thread = Thread(self.poll_and_toggle_recording)
 		
-		self.setup_gpio(input_pin, signal_pin)
+		self.setup_gpio(self.input_pin, self.signal_pin)
 		self._listener_thread.start()
 	
 	"""
@@ -72,7 +72,7 @@ class TelegraphKey(object):
 			string += self.key_character()
 
 		return string
-        
+		
 
 	def key_character(self):
 		character = ""

@@ -1,3 +1,5 @@
+sys.path.append('../')
+from tediousms import MorseCodeInterpreter
 from MorseCodeInterpreter import *
 
 #UNIT TEST!
