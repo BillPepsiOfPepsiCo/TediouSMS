@@ -17,23 +17,58 @@ WORD_SPACE_LENGTH = UNIT_LENGTH * 7
 DOT = '.'
 DASH = '-'
 
+RECORDING = False
+
 class TelegraphKey(object):
 
 	def __init__(self, input_pin, signal_pin):
 		self.input_pin = input_pin
 		self.signal_pin = signal_pin
-		self._listener_thread = Thread(self.begin_recording_message)
+		self._listener_thread = Thread(self.poll_and_toggle_recording)
 		
-	def begin_recording_message(self):
+		self.setup_gpio(input_pin, signal_pin)
+		self._listener_thread.start()
+	
+	"""
+	Sets up the GPIO pins passed to the constructor.
+	Also sets the pin numbering sceme to Broadcom mode.
+	"""
+	def setup_gpio(self, *pins):
+		print("Setting GPIO mode to Broadcom Pin Mode")
+		GPIO.setmode(GPIO.BCM)
+		
+		for pin in pins:
+			GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+		
+	"""
+	Runs on the _listener_thread when this class is initialized.
+	Toggles the global RECORDING variable based on if a button press was detected.
+	"""
+	def poll_and_toggle_recording(self):
+		global RECORDING
+		#I know what you're thinking: jesus bro, a global async variable.
+		#But keep in mind: this is only being written to from inside
+		#one thread, and is only read until the button is pressed again
+		#(the update of which occurs in the same thread as all other
+		#writes). So, it's surprisingly threadsafe.
+	
 		while True:
 			#Listen for a high voltage on the signal pin
 			#Begin keying the input until the signal pin recieves another high voltage
-			pass
-		
-	def key_string(self, predicate):
+			button_pressed = GPIO.input(signal_pin)
+			if button_pressed:
+				RECORDING = not RECORDING
+				time.sleep(1)
+							
+	
+	"""
+	Begins keying a string. Returns the string when the
+	signal pin button is pressed.
+	"""
+	def key_string(self):
 		string = ""
 
-		while predicate(): #TODO figure out an exit condition
+		while RECORDING:
 			string += self.key_character()
 
 		return string
@@ -42,11 +77,13 @@ class TelegraphKey(object):
 	def key_character(self):
 		character = ""
 		unit = self.key_unit_positive()
-		
+
 		if unit > UNIT_LENGTH and unit < DASH_LENGTH:
-		character += "."
+			character += "."
+			#TODO: play "dit" sound from speaker
 		elif unit > DASH_LENGTH and unit < WORD_SPACE_LENGTH:
 			character += "-"
+			#TODO: play "dah" sound from speaker
 			
 		negative_unit = self.key_unit_negative()
 			
