@@ -26,7 +26,8 @@ compiliation:
 ```sh
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install tk-dev```
+sudo apt-get install tk-dev
+```
 
 I'm not actually sure if that works, so in the near future (next day or 2) I'm going to
 figure out how to acquire it from somewhere that's not apt. 
