@@ -18,7 +18,7 @@ class CustomBase_GUI(Base_GUI):
 		text = self.outbound_message_textbox.get("1.0", END)
 		
 		if len(text) > 0:
-			asyncio.get_event_loop().run_until_complete(self._telesocket.connect_and_send(text))
+			asyncio.new_event_loop().run_until_complete(self._telesocket.connect_and_send(text))
 		
 	def recipient_ip_entry_field_invalidcommand(self, *args):
 		print(args)
@@ -83,7 +83,7 @@ class CustomBase_GUI(Base_GUI):
 		self.listening_checkbox_value.set(0)
 	
 	def on_message_received(self, message):
-		print("Got message =>", message)
+		set_text(self.inbound_message_textbox, message)
 			
 	
 def main():
