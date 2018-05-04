@@ -1,6 +1,9 @@
-import socket, asyncio, websockets, fcntl, struct, platform
+import socket, asyncio, websockets, struct, platform
 from socket import gethostbyname, gethostname
 from threading import Thread
+
+if "Linux" in platform.platform():
+	import fcntl
 
 PREVIOUS_SERVER_ADDRESS = None
 

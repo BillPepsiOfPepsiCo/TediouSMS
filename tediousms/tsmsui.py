@@ -54,7 +54,7 @@ class Base_GUI(object):
 		
 		self.user_ip_entry_field = Tkinter.Entry(root,
 			width = 0,
-			state = NORMAL,
+			state = "readonly",
 		)
 		
 		self.listening_checkbox = Tkinter.Checkbutton(root,
@@ -262,44 +262,27 @@ maintain state after editing is complete.
 
 #Clears the text of the specified tkinter text widget.
 def clear_text(widget):
-	read_only = check_state(widget)
-
-	if read_only:
-		widget.config(state = "normal")
-
-	widget.delete(0, END)
-
-	if read_only:
-		widget.config(state = "readonly")
+	do_thing_with_text_preserve_state(widget, widget.delete, 0, END)
 
 #"Sets," i.e. clears the current text and then appends, the specified text
 #to the specified tkinter text widget.
 def set_text(widget, text):
-	read_only = check_state(widget)
-
-	if read_only:
-		widget.config(state = "normal")
-
 	clear_text(widget)
-	widget.insert(0, text)
-
-	if read_only:
-		widget.config(state = "readonly")
+	do_thing_with_text_preserve_state(widget, widget.insert, 0, text)
 
 #Adds text to a tkinter text widget without removing any text beforehand.
-def append_text(widget, text, read_only):
-	read_only = check_state(widget)
-
-	if read_only:
-		widget.config(state = "normal")
-
-	widget.insert(INSERT, text)
-
-	if read_only:
-		widget.config(state = "readonly")
+def append_text(widget, text):
+	do_thing_with_text_preserve_state(widget, widget.insert, INSERT, text)
+	
+def do_thing_with_text_preserve_state(widget, thing, index, text):
+	old_state = get_state(widget)
+	
+	widget.config(state = "normal")
+	thing(index, text)
+	widget.config(state = old_state)
 
 #Returns true if disabled, false if enabled.
-def check_state(widget):
-	return	widget["state"] == "disabled"
+def get_state(widget):
+	return widget["state"]
 
 
