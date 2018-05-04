@@ -1,8 +1,6 @@
-import socket
+import socket, asyncio, websockets, fcntl, struct, platform
 from socket import gethostbyname, gethostname
 from threading import Thread
-import asyncio
-import websockets
 
 PREVIOUS_SERVER_ADDRESS = None
 
@@ -201,11 +199,36 @@ def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 3):
 		print("User does not appear to be connected to a network (DNS at 8.8.8.8:53 timed out after 3s)")
 		print(ex.args)
 		return False
+
+def get_user_ip_address():
+	if not user_connected_to_network():
+		return None
+
+	cur_platform = platform.platform()
+	
+	if "Linux" in cur_platform:
+		return get_ip_linux()
+	elif "Windows" in cur_platform:
+		return get_ip_windows()
+
+def get_ip_linux(host = "8.8.8.8", port = 53):
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.connect((host, port))
+	return s.getsockname()[0]
+		
 	
 #Returns the user's current IP address
 #returns None if the user is not connected to a network
-def get_user_ip_address():
-	if user_connected_to_network():
-		return gethostbyname(gethostname())
-	else:
-		return None
+def get_ip_windows():
+	return gethostbyname(gethostname())
+
+"""
+This finds the IP address of the specified network interface for Linux users.
+Default parameter is eth0.
+"""
+def get_ip_from_ifname(interface_name = "eth0"):
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	return socket.inet_ntoa(fcntl.ioctl(s.fileno(),
+					    0x8915,
+					    struct.pack('256s', bytes(interface_name[:15], 'utf-8'))
+					    )[20:24])
