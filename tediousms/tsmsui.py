@@ -43,13 +43,13 @@ class Base_GUI(object):
 		self.outbound_message_textbox = Tkinter.Text(root,
 			height = 0,
 			width = 0,
-			state = DISABLED,
+			state = NORMAL,
 		)
 				
 		self.inbound_message_textbox = Tkinter.Text(root,
 			height = 0,
 			width = 0,
-			state = DISABLED,
+			state = NORMAL,
 		)
 		
 		self.user_ip_entry_field = Tkinter.Entry(root,
