@@ -54,7 +54,7 @@ class Base_GUI(object):
 		
 		self.user_ip_entry_field = Tkinter.Entry(root,
 			width = 0,
-			state = DISABLED,
+			state = NORMAL,
 		)
 		
 		self.listening_checkbox = Tkinter.Checkbutton(root,
