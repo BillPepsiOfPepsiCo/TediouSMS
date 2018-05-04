@@ -83,8 +83,8 @@ class CustomBase_GUI(Base_GUI):
 		self.listening_checkbox_value.set(0)
 	
 	def on_message_received(self, message):
-		set_text(self.inbound_message_textbox, message)
-			
+		self.inbound_message_textbox.delete('1.0', END)
+		self.inbound_message_textbox.insert('1.0', message)
 	
 def main():
 	root = Tk()
