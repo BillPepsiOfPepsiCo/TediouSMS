@@ -116,20 +116,20 @@ class Telesocket(object):
 	"""
 	async def connect_and_send(self, message):
 		try:
-			async with websockets.connect(self.client_uri()) as websocket:
+			async with websockets.connect(self.client_uri(), timeout = 2) as websocket:
 				print("Connection to %s successfully established" % self.client_uri())
 				await websocket.send(message)
+				print("Sent message => %s\nTo recipient => %s" % (message, self.client_uri()))
 				
-		except Exception as e:
-			print("An exception occurred while trying to establish a connection and send a message: ")
-			print(e.args)
+		except TimeoutError:
+			print("It appears there is no open server at", self.client_uri())
 	
 	"""
 	The function you want to call when you want to send a message to the (hopefully listening)
 	recipient_ip and recipient_port.
 	"""
 	def send_message(self, message):
-		asyncio.get_event_loop().run_until_complete(self.connect_and_send(message))
+		asyncio.new_event_loop().run_until_complete(self.connect_and_send(message))
 	
 	"""
 	Returns a websocket 4.0 friendly URI with the host IP and port.
@@ -193,7 +193,7 @@ def is_valid_ip(ip_address):
 
 #Returns true if Google's DNS is successfully reached and False otherwise.
 #A good indicator of whether or not the user is connected to a network.
-def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 3):
+def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 10):
 	try:
 		socket.setdefaulttimeout(timeout)
 		socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
@@ -219,19 +219,7 @@ def get_ip_linux(host = "8.8.8.8", port = 53):
 	s.connect((host, port))
 	return s.getsockname()[0]
 		
-	
 #Returns the user's current IP address
 #returns None if the user is not connected to a network
 def get_ip_windows():
 	return gethostbyname(gethostname())
-
-"""
-This finds the IP address of the specified network interface for Linux users.
-Default parameter is eth0.
-"""
-def get_ip_from_ifname(interface_name = "eth0"):
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	return socket.inet_ntoa(fcntl.ioctl(s.fileno(),
-					    0x8915,
-					    struct.pack('256s', bytes(interface_name[:15], 'utf-8'))
-					    )[20:24])

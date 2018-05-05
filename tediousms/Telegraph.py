@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
-import time, numpy, pygame.sndarray
+import time, pygame.sndarray
+from tkinter import INSERT, END
 
 #Class that handles the keying of characters
 
@@ -21,9 +22,12 @@ RECORDING = False
 
 class TelegraphKey(object):
 
-	def __init__(self, input_pin, signal_pin):
+	def __init__(self, input_pin, signal_pin, recording_indicator_pin, incoming_message_indicator_pin, output_widget):
 		self.input_pin = input_pin
 		self.signal_pin = signal_pin
+		self.recording_indicator_pin = recording_indicator_pin
+		self.incoming_message_indicator_pin = incoming_message_indicator_pin
+		
 		self._listener_thread = Thread(self.poll_and_toggle_recording)
 		self._750_Hz_tone = None
 		
@@ -59,6 +63,12 @@ class TelegraphKey(object):
 			if button_pressed:
 				RECORDING = not RECORDING
 				time.sleep(1)
+				
+				if RECORDING:
+					self.output_widget.configure(state = "normal")
+					self.output_widget.delete('1.0', END)
+					self.output_widget.insert('1.0', self.key_string())
+					self.output_widget.configure(state = "readonly")
 	
 	"""
 	Call this method to initialize the 750 Hz tone and play it when the button's pressed.

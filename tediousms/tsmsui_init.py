@@ -18,7 +18,7 @@ class CustomBase_GUI(Base_GUI):
 		text = self.outbound_message_textbox.get("1.0", END)
 		
 		if len(text) > 0:
-			asyncio.new_event_loop().run_until_complete(self._telesocket.connect_and_send(text))
+			self._telesocket.send_message(text)
 		
 	def recipient_ip_entry_field_invalidcommand(self, *args):
 		print(args)
@@ -61,7 +61,7 @@ class CustomBase_GUI(Base_GUI):
 				
 				if user_connected_to_network():
 					print("Initializing Telesocket(TM)")
-					self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)				
+					self._telesocket = Telesocket(get_user_ip_address(), DEFAULT_PORT, client_ip, DEFAULT_PORT, self.on_message_received)					
 					self._telesocket.start_server_thread()
 					self.send_button.configure(state = "normal")
 					self.recipient_ip_entry_field.configure(state = "readonly")
@@ -83,8 +83,10 @@ class CustomBase_GUI(Base_GUI):
 		self.listening_checkbox_value.set(0)
 	
 	def on_message_received(self, message):
+		self.inbound_message_textbox.configure(state = "normal")
 		self.inbound_message_textbox.delete('1.0', END)
 		self.inbound_message_textbox.insert('1.0', message)
+		self.inbound_message_textbox.configure(state = "readonly")
 	
 def main():
 	root = Tk()
@@ -95,6 +97,9 @@ def main():
 	#it has to come after the Tk() call unless you're on python 2
 	demo.listening_checkbox_value = IntVar()
 	demo.listening_checkbox.configure(variable = demo.listening_checkbox_value)
+	
+	#Initialize the morse code "engine"
+	tkey = TelegraphKey(16, 17, 27, 26)
 	
 	root.title('TediouSMS')
 	root.protocol('WM_DELETE_WINDOW', root.quit)
