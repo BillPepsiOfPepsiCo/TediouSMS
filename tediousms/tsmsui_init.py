@@ -97,8 +97,6 @@ def main():
 	demo.listening_checkbox.configure(variable = demo.listening_checkbox_value)
 	
 	root.title('TediouSMS')
-	try: run()
-	except NameError: pass
 	root.protocol('WM_DELETE_WINDOW', root.quit)
 	set_text(demo.user_ip_entry_field, get_user_ip_address())
 	root.mainloop()
