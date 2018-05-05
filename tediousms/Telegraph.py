@@ -65,10 +65,12 @@ class TelegraphKey(object):
 				time.sleep(1)
 				
 				if RECORDING:
+					GPIO.output(self.recording_indicator_pin, GPIO.HIGH)
 					self.output_widget.configure(state = "normal")
 					self.output_widget.delete('1.0', END)
 					self.output_widget.insert('1.0', self.key_string())
 					self.output_widget.configure(state = "readonly")
+					GPIO.output(self.recording_indicator_pin, GPIO.LOW)
 	
 	"""
 	Call this method to initialize the 750 Hz tone and play it when the button's pressed.
