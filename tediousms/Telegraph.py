@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-import time, pygame.sndarray
+import time, pygame, numpy
 from tkinter import INSERT, END
 
 #Class that handles the keying of characters
@@ -7,7 +7,7 @@ from tkinter import INSERT, END
 #Based off of this graphic: https://en.wikipedia.org/wiki/Morse_code#/media/File:International_Morse_Code.svg
 #Length of a "dit"
 UNIT_LENGTH = 0.07 #The length of one morse code "unit"
-#Length of a "dah," typically 3 times greater than the length of a "dit"
+#Length of a "dah," typicnumpy-1.14.3-cp27-cp27m-manylinux1_i686ally 3 times greater than the length of a "dit"
 DASH_LENGTH = UNIT_LENGTH * 3 #0.21
 #Length of time between parts of the same letter
 LETTER_PART_SPACE_LENGTH = UNIT_LENGTH #0.07
@@ -76,17 +76,17 @@ class TelegraphKey(object):
 	Call this method to initialize the 750 Hz tone and play it when the button's pressed.
 	Without calling this the button will not play a sound.
 	"""
-	def init_sounds(self):
-		sample_rate = 44100
-		frequency = 750 #Hz
-		
-		period = int(round(sample_rate / frequency))
-		pygame.mixer.pre_init(sample_rate, -16, 1)
-		pygame.init()
-		
-		arr = array("h", [0] * period)
-		self._750_Hz_tone = pygame.snd_array.make_sound(arr)
-	
+        def init_sounds(self):
+            frequency = 750 #Hz    
+            sample_rate = pygame.mixer.get_init()[0]
+            period = int(round(sample_rate / frequency))
+            amplitude = 2 ** (abs(pygame.mixer.get_init()[1]) - 1) - 1
+
+            def frame_value(i):
+                amplitude * numpy.sin(2.0 * numpy.pi * frequency * i / sample_rate)
+
+            self._750_Hz_tone = numpy.array([frame_value(x) for x in range(0, period)]).astype(numpy.init16)
+
 	"""
 	Begins keying a string. Returns the string when the
 	signal pin button is pressed.

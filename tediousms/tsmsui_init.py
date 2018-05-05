@@ -2,6 +2,7 @@ from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
 from telesocket import *
+from Telegraph import TelegraphKey
 import asyncio
 
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
