@@ -185,14 +185,22 @@ class TelegraphKey(object):
 			pass
 		
 		#Record the start time
-		self._750_Hz_tone.play(-1)
 		start = time.time()
+		
+		#Start playing the beep
+		self._750_Hz_tone.play(-1)
+		
+		#Light the incoming_message_indicator_pin
+		GPIO.output(self.incoming_message_indicator_pin, GPIO.HIGH)
 		
 		#Hang until button is released
 		while GPIO.input(self.input_pin) and RECORDING:
 			pass
 		
+		#Stop playing the beep
 		self._750_Hz_tone.stop()
+		GPIO.output(self.incoming_message_indicator_pin, GPIO.LOW)
+		
 		#Return elapsed time
 		return time.time() - start
 		
