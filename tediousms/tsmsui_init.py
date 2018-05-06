@@ -4,6 +4,7 @@ from socket import gethostbyname, gethostname
 from telesocket import *
 from Telegraph import TelegraphKey
 import asyncio
+from RPi.GPIO import cleanup
 
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
 
@@ -100,11 +101,18 @@ def main():
 	demo.listening_checkbox.configure(variable = demo.listening_checkbox_value)
 	
 	#Initialize the morse code "engine"
-	tkey = TelegraphKey(16, 17, 27, 26)
+	tkey = TelegraphKey(16, 17, 27, 26, demo.outbound_message_textbox)
 	
 	root.title('TediouSMS')
 	root.protocol('WM_DELETE_WINDOW', root.quit)
-	set_text(demo.user_ip_entry_field, get_user_ip_address())
+
+	
+	if user_connected_to_network():
+		set_text(demo.user_ip_entry_field, get_user_ip_address())
+	else:
+		set_text(demo.user_ip_entry_field, "Not connected to Internet")
+
 	root.mainloop()
+	cleanup()
 
 if __name__ == '__main__': main()

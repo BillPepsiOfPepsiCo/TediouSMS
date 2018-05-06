@@ -1,6 +1,10 @@
 import RPi.GPIO as GPIO
 import time, pygame, numpy
 from tkinter import INSERT, END
+from threading import Thread
+from multiprocessing.pool import ThreadPool
+from time import sleep
+import asyncio
 
 #Class that handles the keying of characters
 
@@ -27,23 +31,34 @@ class TelegraphKey(object):
 		self.signal_pin = signal_pin
 		self.recording_indicator_pin = recording_indicator_pin
 		self.incoming_message_indicator_pin = incoming_message_indicator_pin
+		self.output_widget = output_widget
 		
-		self._listener_thread = Thread(self.poll_and_toggle_recording)
+		self.setup_gpio()
+		
 		self._750_Hz_tone = None
-		
-		self.setup_gpio(self.input_pin, self.signal_pin)
-		self._listener_thread.start()
+		self._keyed_string = None
+		self._thread = Thread(target = self.poll_loop, daemon = True)
+		self._thread.start()
+        
 	"""
 	Sets up the GPIO pins passed to the constructor.
 	Also sets the pin numbering sceme to Broadcom mode.
 	"""
-	def setup_gpio(self, *pins):
+	def setup_gpio(self):
 		print("Setting GPIO mode to Broadcom Pin Mode")
 		GPIO.setmode(GPIO.BCM)
 		
-		for pin in pins:
+		for pin in (self.signal_pin, self.input_pin):
 			GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+			
+		for pin in (self.recording_indicator_pin, self.incoming_message_indicator_pin):
+                        GPIO.setup(pin, GPIO.OUT)
+                        GPIO.output(pin, GPIO.LOW)
 		
+	def poll_loop(self):
+		while True:
+			self.poll_and_toggle_recording()
+
 	"""
 	Runs on the _listener_thread when this class is initialized.
 	Toggles the global RECORDING variable based on if a button press was detected.
@@ -59,19 +74,26 @@ class TelegraphKey(object):
 		while True:
 			#Listen for a high voltage on the signal pin
 			#Begin keying the input until the signal pin recieves another high voltage
-			button_pressed = GPIO.input(signal_pin)
+			button_pressed = GPIO.input(self.signal_pin)
 			if button_pressed:
+				print("RECORDING STATE CHANGED TO =>", bool(button_pressed))
 				RECORDING = not RECORDING
-				time.sleep(1)
-				
-				if RECORDING:
-					GPIO.output(self.recording_indicator_pin, GPIO.HIGH)
-					self.output_widget.configure(state = "normal")
-					self.output_widget.delete('1.0', END)
-					self.output_widget.insert('1.0', self.key_string())
-					self.output_widget.configure(state = "readonly")
-					GPIO.output(self.recording_indicator_pin, GPIO.LOW)
-	
+				GPIO.output(self.recording_indicator_pin, RECORDING)
+				break
+		
+		if RECORDING:
+			self.output_widget.delete('1.0', END)
+			pool = ThreadPool(processes = 1)
+			self._keyed_string = pool.apply_async(self.key_string)
+		else:
+			self.output_widget.configure(state = "normal")
+			self.output_widget.insert('1.0', self._keyed_string.get())
+			self.output_widget.configure(state = "disabled")
+		
+		sleep(0.2)
+			
+			
+
 	"""
 	Call this method to initialize the 750 Hz tone and play it when the button's pressed.
 	Without calling this the button will not play a sound.
@@ -136,14 +158,14 @@ class TelegraphKey(object):
 	#Used for everything besides unit measurements between letters and words.
 	def key_unit_positive(self):
 		#Hang until the button is pressed
-		while not GPIO.input(self.input_pin):
+		while not GPIO.input(self.input_pin) and RECORDING:
 			pass
 		
 		#Record the start time
 		start = time.time()
 		
 		#Hang until button is released
-		while GPIO.input(self.input_pin):
+		while GPIO.input(self.input_pin) and RECORDING:
 			pass
 		
 		#Return elapsed time
@@ -158,7 +180,7 @@ class TelegraphKey(object):
 		start = time.time()
 		
 		#Hang until button is pushed
-		while not GPIO.input(self.input_pin):
+		while not GPIO.input(self.input_pin) and RECORDING:
 			pass
 		
 		#Return elapsed time
