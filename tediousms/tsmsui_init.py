@@ -40,7 +40,7 @@ class CustomBase_GUI(Base_GUI):
 					self._telesocket.start_server_thread()
 					self.send_button.configure(state = "normal")
 					self.recipient_ip_entry_field.configure(state = "readonly")
-					self._telegraph_key = TelegraphKey(16, 17, 27, 26, demo.outbound_message_textbox)
+					self._telegraph_key = TelegraphKey(16, 17, 27, 26, self.outbound_message_textbox)
 				else:
 					print("Could not listen: user not connected to the Internet")
 					self.listen_fail()
