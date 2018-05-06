@@ -77,10 +77,7 @@ class TelegraphKey(object):
 	Sets up the GPIO pins passed to the constructor.
 	Also sets the pin numbering sceme to Broadcom mode.
 	"""
-	def setup_gpio(self):
-		print("Setting GPIO mode to Broadcom Pin Mode")
-		GPIO.setmode(GPIO.BCM)
-		
+	def setup_gpio(self):		
 		for pin in (self.signal_pin, self.input_pin):
 			GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 			
@@ -88,7 +85,7 @@ class TelegraphKey(object):
 			GPIO.setup(pin, GPIO.OUT)
 			GPIO.output(pin, GPIO.LOW)
 	
-	def __deinit(self):
+	def _deinit(self):
 		RECORDING = False
 		self.__run = False
 		GPIO.cleanup()

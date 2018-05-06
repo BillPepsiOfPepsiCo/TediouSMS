@@ -53,7 +53,7 @@ class CustomBase_GUI(Base_GUI):
 				self._telesocket.stop_server_thread()
 				self.send_button.configure(state = "disabled")
 				self.recipient_ip_entry_field.configure(state = "normal")
-				self._telegraph_key.__deinit()
+				self._telegraph_key._deinit()
 			
 	def listen_fail(self):
 		self.listening_checkbox_value.set(0)
@@ -62,29 +62,31 @@ class CustomBase_GUI(Base_GUI):
 		self.inbound_message_textbox.configure(state = "normal")
 		self.inbound_message_textbox.delete('1.0', END)
 		
-		for char in message:			
+		for char in message:
+			sleep(0.1)
+			
 			if char == DOT:
 				self._telegraph_key._750_Hz_tone.play(-1)
-				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.HIGH)
-				self.inbound_message_textbox.insert(INSERT, char)
+				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.HIGH)			
 				sleep(UNIT_LENGTH)
-				self._telegraph_key._750_Hz_tone.stop()
-				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.LOW)
 			elif char == DASH:
-				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.HIGH)
 				self._telegraph_key._750_Hz_tone.play(-1)
-				self.inbound_message_textbox.insert(INSERT, char)
+				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.HIGH)			
 				sleep(DASH_LENGTH)
-				self._telegraph_key._750_Hz_tone.stop()
-				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.LOW)
 			elif char == " ":
 				sleep(LETTER_SPACE_LENGTH)
 			elif char == "/":
 				sleep(WORD_SPACE_LENGTH)
+
+			self.inbound_message_textbox.insert(INSERT, char)
+
+			self._telegraph_key._750_Hz_tone.stop()
+			GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.LOW)
 				
-		self.inbound_message_textbox.configure(state = "readonly")
+		self.inbound_message_textbox.configure(state = "disabled")
 	
 def main():
+	GPIO.setmode(GPIO.BCM)
 	root = Tk()
 	demo = CustomBase_GUI(root)
 	
