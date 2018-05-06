@@ -2,8 +2,9 @@ from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
 from telesocket import *
-from Telegraph import TelegraphKey
-from RPi.GPIO import cleanup
+from Telegraph import *
+import RPi.GPIO as GPIO
+from time import sleep
 import asyncio
 
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
@@ -22,8 +23,6 @@ class CustomBase_GUI(Base_GUI):
 		
 		if len(text) > 0:
 			self._telesocket.send_message(text)
-		
-
 		
 	def listening_checkbox_command(self, *args):
 		if self.listening_checkbox_value.get():
@@ -62,7 +61,27 @@ class CustomBase_GUI(Base_GUI):
 	def on_message_received(self, message):
 		self.inbound_message_textbox.configure(state = "normal")
 		self.inbound_message_textbox.delete('1.0', END)
-		self.inbound_message_textbox.insert('1.0', message)
+		
+		for char in message:			
+			if char == DOT:
+				self._telegraph_key._750_Hz_tone.play(-1)
+				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.HIGH)
+				self.inbound_message_textbox.insert(INSERT, char)
+				sleep(UNIT_LENGTH)
+				self._telegraph_key._750_Hz_tone.stop()
+				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.LOW)
+			elif char == DASH:
+				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.HIGH)
+				self._telegraph_key._750_Hz_tone.play(-1)
+				self.inbound_message_textbox.insert(INSERT, char)
+				sleep(DASH_LENGTH)
+				self._telegraph_key._750_Hz_tone.stop()
+				GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.LOW)
+			elif char == " ":
+				sleep(LETTER_SPACE_LENGTH)
+			elif char == "/":
+				sleep(WORD_SPACE_LENGTH)
+				
 		self.inbound_message_textbox.configure(state = "readonly")
 	
 def main():
@@ -81,7 +100,6 @@ def main():
 	
 	if user_connected_to_network():
 		set_text(demo.user_ip_entry_field, get_user_ip_address())
-		
 	else:
 		set_text(demo.user_ip_entry_field, "Not connected to Internet")
 

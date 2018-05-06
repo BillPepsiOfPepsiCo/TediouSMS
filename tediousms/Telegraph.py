@@ -20,6 +20,7 @@ LETTER_PART_SPACE_LENGTH = UNIT_LENGTH #0.07
 LETTER_SPACE_LENGTH = UNIT_LENGTH * 3
 #Length of time between words
 WORD_SPACE_LENGTH = UNIT_LENGTH * 7
+
 DOT = '.'
 DASH = '-'
 
@@ -113,7 +114,6 @@ class TelegraphKey(object):
 			#Begin keying the input until the signal pin recieves another high voltage
 			button_pressed = GPIO.input(self.signal_pin)
 			if button_pressed:
-				print("RECORDING STATE CHANGED TO =>", bool(button_pressed))
 				RECORDING = not RECORDING
 				GPIO.output(self.recording_indicator_pin, RECORDING)
 				break
