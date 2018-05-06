@@ -23,11 +23,15 @@ DASH = '-'
 
 RECORDING = False
 
+MIXER_FREQ = 44100
+MIXER_SIZE = -16
+MIXER_CHANS
+MIXER_BUFF = 1024
 
 class TelegraphTone(pygame.mixer.Sound):
 
 	def __init__(self, frequency):
-		self.frequency = frequency	
+		self.frequency = frequency
 		pygame.mixer.Sound.__init__(self, buffer = self.build_samples())
 		self.set_volume(1)
 		
@@ -130,6 +134,8 @@ class TelegraphKey(object):
 	Without calling this the button will not play a sound.
 	"""
 	def init_sounds(self):
+		pygame.mixer.pre_init(MIXER_FREQ, MIXER_SIZE, MIXER_CHANS, MIXER_BUFF)
+		pygame.init()
 		self._750_Hz_tone = TelegraphTone(750)
 
 	"""
