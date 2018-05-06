@@ -4,6 +4,8 @@ from tkinter import INSERT, END
 from threading import Thread
 from multiprocessing.pool import ThreadPool
 from time import sleep
+from array import array
+from math import pi, sin
 
 #Class that handles the keying of characters
 
@@ -25,7 +27,7 @@ RECORDING = False
 
 MIXER_FREQ = 44100
 MIXER_SIZE = -16
-MIXER_CHANS
+MIXER_CHANS = 1
 MIXER_BUFF = 1024
 
 class TelegraphTone(pygame.mixer.Sound):
