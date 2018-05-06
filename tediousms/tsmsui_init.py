@@ -3,8 +3,8 @@ from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
 from telesocket import *
 from Telegraph import TelegraphKey
-import asyncio
 from RPi.GPIO import cleanup
+import asyncio
 
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
 
@@ -15,6 +15,7 @@ class CustomBase_GUI(Base_GUI):
 	def __init__(self, root):
 		Base_GUI.__init__(self, root)
 		self._telesocket = None
+		self._telegraph_key = None
 		
 	def on_send_button_clicked(self, *args):
 		text = self.outbound_message_textbox.get("1.0", END)
@@ -67,6 +68,7 @@ class CustomBase_GUI(Base_GUI):
 					self._telesocket.start_server_thread()
 					self.send_button.configure(state = "normal")
 					self.recipient_ip_entry_field.configure(state = "readonly")
+					self._telegraph_key = TelegraphKey(16, 17, 27, 26, demo.outbound_message_textbox)
 				else:
 					print("Could not listen: user not connected to the Internet")
 					self.listening_checkbox_value.set(0)
@@ -80,6 +82,7 @@ class CustomBase_GUI(Base_GUI):
 				self._telesocket.stop_server_thread()
 				self.send_button.configure(state = "disabled")
 				self.recipient_ip_entry_field.configure(state = "normal")
+				self._telegraph_key.__deinit()
 			
 	def listen_fail(self):
 		self.listening_checkbox_value.set(0)
@@ -100,19 +103,16 @@ def main():
 	demo.listening_checkbox_value = IntVar()
 	demo.listening_checkbox.configure(variable = demo.listening_checkbox_value)
 	
-	#Initialize the morse code "engine"
-	tkey = TelegraphKey(16, 17, 27, 26, demo.outbound_message_textbox)
-	
 	root.title('TediouSMS')
 	root.protocol('WM_DELETE_WINDOW', root.quit)
 
 	
 	if user_connected_to_network():
 		set_text(demo.user_ip_entry_field, get_user_ip_address())
+		
 	else:
 		set_text(demo.user_ip_entry_field, "Not connected to Internet")
 
 	root.mainloop()
-	cleanup()
 
 if __name__ == '__main__': main()

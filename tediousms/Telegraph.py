@@ -1,10 +1,9 @@
 import RPi.GPIO as GPIO
-import time, pygame, numpy
+import time, pygame, numpy, asyncio
 from tkinter import INSERT, END
 from threading import Thread
 from multiprocessing.pool import ThreadPool
 from time import sleep
-import asyncio
 
 #Class that handles the keying of characters
 
@@ -37,6 +36,9 @@ class TelegraphKey(object):
 		
 		self._750_Hz_tone = None
 		self._keyed_string = None
+		self.__run = True
+		
+		self.init_sounds()
 		self._thread = Thread(target = self.poll_loop, daemon = True)
 		self._thread.start()
         
@@ -52,11 +54,16 @@ class TelegraphKey(object):
 			GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 			
 		for pin in (self.recording_indicator_pin, self.incoming_message_indicator_pin):
-                        GPIO.setup(pin, GPIO.OUT)
-                        GPIO.output(pin, GPIO.LOW)
+			GPIO.setup(pin, GPIO.OUT)
+			GPIO.output(pin, GPIO.LOW)
+	
+	def __deinit(self);
+		RECORDING = False
+		self.__run = False
+		GPIO.cleanup()
 		
 	def poll_loop(self):
-		while True:
+		while self.__run:
 			self.poll_and_toggle_recording()
 
 	"""

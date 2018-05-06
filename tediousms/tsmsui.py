@@ -68,46 +68,6 @@ class Base_GUI(object):
 			command = self.on_send_button_clicked
 		)
 		
-		self.recipient_ip_entry_field.configure(
-			invalidcommand = self.recipient_ip_entry_field_invalidcommand
-		)
-		
-		self.recipient_ip_entry_field.configure(
-			validatecommand = self.recipient_ip_entry_field_validatecommand
-		)
-		
-		self.recipient_ip_entry_field.configure(
-			xscrollcommand = self.recipient_ip_entry_field_xscrollcommand
-		)
-		
-		self.user_ip_entry_field.configure(
-			invalidcommand = self.user_ip_entry_field_invalidcommand
-		)
-		
-		self.user_ip_entry_field.configure(
-			validatecommand = self.user_ip_entry_field_validatecommand
-		)
-		
-		self.user_ip_entry_field.configure(
-			xscrollcommand = self.user_ip_entry_field_xscrollcommand
-		)
-		
-		self.outbound_message_textbox.configure(
-			xscrollcommand = self.outbound_message_textbox_xscrollcommand
-		)
-		
-		self.outbound_message_textbox.configure(
-			yscrollcommand = self.outbound_message_textbox_yscrollcommand
-		)
-		
-		self.inbound_message_textbox.configure(
-			xscrollcommand = self.inbound_message_textbox_xscrollcommand
-		)
-		
-		self.inbound_message_textbox.configure(
-			yscrollcommand = self.inbound_message_textbox_yscrollcommand
-		)
-
 		self.listening_checkbox.configure(
 			command = self.listening_checkbox_command
 		)
