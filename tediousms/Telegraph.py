@@ -128,8 +128,6 @@ class TelegraphKey(object):
 			self.output_widget.configure(state = "disabled")
 		
 		sleep(0.2)
-			
-			
 
 	"""
 	Call this method to initialize the 750 Hz tone and play it when the button's pressed.
@@ -155,14 +153,8 @@ class TelegraphKey(object):
 
 	def key_character(self):
 		character = ""
-		
-		if self._750_Hz_tone is not None:
-			self._750_Hz_tone.play(-1)
 			
 		unit = self.key_unit_positive()
-		
-		if self._750_Hz_tone is not None:
-			self._750_Hz_tone.stop()
 
 		if unit > UNIT_LENGTH and unit < DASH_LENGTH:
 			character += "."
@@ -193,12 +185,14 @@ class TelegraphKey(object):
 			pass
 		
 		#Record the start time
+		self._750_Hz_tone.play(-1)
 		start = time.time()
 		
 		#Hang until button is released
 		while GPIO.input(self.input_pin) and RECORDING:
 			pass
 		
+		self._750_Hz_tone.stop()
 		#Return elapsed time
 		return time.time() - start
 		
