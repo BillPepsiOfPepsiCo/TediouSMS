@@ -1,3 +1,12 @@
+"""
+So this file is actually unused.
+This is due to the fact that we are
+not skilled morse code typists
+and testing would be very difficult 
+if we tried to key actual letters instead
+of just little test strings.
+"""
+
 ASCII_TABLE = {
 	'A' : ".-",
 	'B' : "-...",

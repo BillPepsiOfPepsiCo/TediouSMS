@@ -1,6 +1,5 @@
-import tkinter as Tkinter
-from tkinter import *
 import os
+from tkinter import *
 
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
 class Base_GUI(object):
@@ -10,54 +9,54 @@ class Base_GUI(object):
 	def __init__(self, root):
 
 		# Widget Initialization
-		self.sending_label = Tkinter.Label(root,
+		self.sending_label = Label(root,
 			font = "{MS Sans Serif} 14 bold",
 			text = "Sending",
 		)
 		
-		self.receiving_label = Tkinter.Label(root,
+		self.receiving_label = Label(root,
 			font = "{MS Sans Serif} 14 bold",
 			text = "Receiving",
 		)
 
-		self.send_button = Tkinter.Button(root,
+		self.send_button = Button(root,
 			font = "{MS Sans Serif} 14 bold",
 			text = "SEND",
 			state = "disabled",
 		)
 		
-		self.recipient_ip_entry_field = Tkinter.Entry(root,
+		self.recipient_ip_entry_field = Entry(root,
 			width = 0,
 		)
 		
-		self.recipient_ip_address_label = Tkinter.Label(root,
+		self.recipient_ip_address_label = Label(root,
 			font = "{MS Sans Serif} 12",
 			text = "Recipient IP Address",
 		)
 		
-		self.user_ip_address_label = Tkinter.Label(root,
+		self.user_ip_address_label = Label(root,
 			font = "{MS Sans Serif} 12",
 			text = "Your IP Address",
 		)
 		
-		self.outbound_message_textbox = Tkinter.Text(root,
+		self.outbound_message_textbox = Text(root,
 			height = 0,
 			width = 0,
 			state = NORMAL,
 		)
 				
-		self.inbound_message_textbox = Tkinter.Text(root,
+		self.inbound_message_textbox = Text(root,
 			height = 0,
 			width = 0,
 			state = NORMAL,
 		)
 		
-		self.user_ip_entry_field = Tkinter.Entry(root,
+		self.user_ip_entry_field = Entry(root,
 			width = 0,
 			state = "readonly",
 		)
 		
-		self.listening_checkbox = Tkinter.Checkbutton(root,
+		self.listening_checkbox = Checkbutton(root,
 			font = "{MS Sans Serif} 12 bold",
 			text = "Listening on IP",
 		)

@@ -1,4 +1,4 @@
-import socket, asyncio, websockets, struct, platform
+import socket, asyncio, websockets, struct, platform, pydoc
 from socket import gethostbyname, gethostname
 from threading import Thread
 
@@ -36,15 +36,18 @@ Brennan
 ###################################################################
 class Telesocket(object):
 
-	"""
-	Creates a new instance of the super intuitive Telesocket.
-	host_ip (str) => a valid IPV4 address that the server will be listening on (the IP the machine this is running on is). See Telesocket.get_user_ip_address()
-	host_port (int) => the port the server will listen on.
-	recipient_ip (str) => a valid IPV4 address that send_message calls will attempt to connect and send a message to.
-	recipient_port (int) => the port the recipient is listening on.
-	message_consumer (function) => a function that's called each time the server recieves a message. Called with 1 parameter, a str (the message).
-	"""
 	def __init__(self, host_ip, host_port, recipient_ip, recipient_port, message_consumer):
+		"""
+		Creates a new instance of the super intuitive Telesocket.
+		
+		Keyword arguments:
+		host_ip (str) => a valid IPV4 address that the server will be listening on (the IP the machine this is running on is). See Telesocket.get_user_ip_address()
+		host_port (int) => the port the server will listen on.
+		recipient_ip (str) => a valid IPV4 address that send_message calls will attempt to connect and send a message to.
+		recipient_port (int) => the port the recipient is listening on.
+		message_consumer (function) => a function that's called each time the server recieves a message. Called with 1 parameter, a str (the message).
+		"""
+		
 		self._host_ip = host_ip
 		self._host_port = host_port
 		self._recipient_ip = recipient_ip
@@ -56,22 +59,27 @@ class Telesocket(object):
 
 		print("Telesocket initialized (host: %s client: %s)" % (self.host_uri(), self.client_uri()))
 	
-	"""
-	The asynchronous function that handles the actual websocket listening and thread monitoring.
-	Also handles closing the thread.
-	"""
 	async def listen(self, websocket, path):
+		"""
+		The asynchronous function that handles the actual websocket listening and thread monitoring.
+		Also handles closing the thread.
+		
+		Keyword arguments:
+		websocket => the websocket to listen on.
+		path => I'm not really sure, but the callback from serving on the websocket gives 2 paremeters so it has to be there.
+		"""
 		async for message in websocket:
 			try:
 				self._message_consumer(message)
 			except TypeError:
 				raise TypeError("The message consumer (%s) for your Telesocket takes too many or too few arguments. (Should be 1)" % str(self._message_consumer))
 		
-	"""
-	Creates a new daemon thread that listens on the specified host_ip and host_port.
-	Can be gracefully and safely shutdown at any time with Telesocket.stop_server_thread()
-	"""
 	def start_server_thread(self):
+		"""
+		Creates a new daemon thread that listens on the specified host_ip and host_port.
+		Can be gracefully and safely shutdown at any time with Telesocket.stop_server_thread()
+		"""
+		
 		global PREVIOUS_SERVER_ADDRESS #A poorly advised global variable that allows host address "reuse"
 		
 		if self._server_thread == None:
@@ -93,11 +101,12 @@ class Telesocket(object):
 			print("Starting server thread")
 			self._server_thread.start()
 	
-	"""
-	If the server thread has been started, gracefully stops it. This can be done at any time with no risk since it's
-	just a listener that calls a synchronous function. 
-	"""
 	def stop_server_thread(self):		
+		"""
+		If the server thread has been started, gracefully stops it. This can be done at any time with no risk since it's
+		just a listener that calls a synchronous function. 
+		"""
+		
 		if self.server_running():
 			print("Stopping server thread")
 			self._loop.call_soon_threadsafe(self._loop.stop)
@@ -110,11 +119,12 @@ class Telesocket(object):
 		else:
 			print("Server thread exit attempted but it\'s not running, ignoring")
 			
-	"""
-	The asynchronous function responsible for connecting to the specified recipient ip and port
-	and sending a message.
-	"""
 	async def connect_and_send(self, message):
+		"""
+		The asynchronous function responsible for connecting to the specified recipient ip and port
+		and sending a message.
+		"""
+		
 		try:
 			async with websockets.connect(self.client_uri(), timeout = 2) as websocket:
 				print("Connection to %s successfully established" % self.client_uri())
@@ -124,36 +134,41 @@ class Telesocket(object):
 		except TimeoutError:
 			print("It appears there is no open server at", self.client_uri())
 	
-	"""
-	The function you want to call when you want to send a message to the (hopefully listening)
-	recipient_ip and recipient_port.
-	"""
 	def send_message(self, message):
+		"""
+		The function you want to call when you want to send a message to the (hopefully listening)
+		recipient_ip and recipient_port.
+		"""
+		
 		asyncio.new_event_loop().run_until_complete(self.connect_and_send(message))
 	
-	"""
-	Returns a websocket 4.0 friendly URI with the host IP and port.
-	"""
 	def host_uri(self):
-		return self.uri(self.host_ip, self.host_port)
+		"""
+		Returns a websocket 4.0 friendly URI with the host IP and port.
+		"""
 		
-	"""
-	Returns a websocket 4.0 friendly URI with the recipient IP and port.
-	"""
+		return self.uri(self.host_ip, self.host_port)
+	
 	def client_uri(self):
+		"""
+		Returns a websocket 4.0 friendly URI with the recipient IP and port.
+		"""
+		
 		return self.uri(self.recipient_ip, self.recipient_port)
 	
-	"""
-	The URI function used in creating URIs. 
-	"""
 	def uri(self, ip, port):
+		"""
+		The URI function used in creating URIs. 
+		"""
+		
 		return "ws://%s:%s" % (ip, port)
 	
-	"""
-	Returns true if the server thread is alive,
-	false if it hasn't been initialized or if it's dead.
-	"""
 	def server_running(self):
+		"""
+		Returns true if the server thread is alive,
+		false if it hasn't been initialized or if it's dead.
+		"""
+		
 		if self._server_thread == None:
 			return False
 		else:
@@ -179,21 +194,27 @@ class Telesocket(object):
 	def recipient_port(self):
 		return self._recipient_port
 
-"""
-An easy, but expensive, way to check if the provided IP address is valid.
-This check is actually so good that testing became annoying since
-it actually ensures the IP is in the valid range of IPV4 addresses.
-"""
 def is_valid_ip(ip_address):
+	"""
+	Returns True if the ip_address is a valid IPV4 addresss, otherwise returns False.
+	"""
+	
 	try:
 		socket.inet_aton(ip_address)
 		return True
 	except socket.error:
 		return False
 
-#Returns true if Google's DNS is successfully reached and False otherwise.
-#A good indicator of whether or not the user is connected to a network.
 def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 10):
+	"""
+	Returns True if the user successfully reaches the host and recieves a response.
+	
+	Keyword arguments:
+	host => The IP of the host to reach (default is 8.8.8.8).
+	port => The port of the host (default is 53).
+	timeout => The timeout of the connection (default 10).
+	"""
+
 	try:
 		socket.setdefaulttimeout(timeout)
 		socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
@@ -204,6 +225,10 @@ def user_connected_to_network(host = "8.8.8.8", port = 53, timeout = 10):
 		return False
 
 def get_user_ip_address():
+	"""
+	Returns the IP of the user if they are connected to a network, otherwise returns None.
+	"""
+	
 	if not user_connected_to_network():
 		return None
 
@@ -215,11 +240,21 @@ def get_user_ip_address():
 		return get_ip_windows()
 
 def get_ip_linux(host = "8.8.8.8", port = 53):
+	"""
+	Returns the IP of a user if they are on a Linux machine.
+	
+	Keyword arguments:
+	host => The host required to connect to in order to get the user's IP without having to know what interface they're using (default is 8.8.8.8).
+	port => The port to try and reach (default is 53).
+	"""
+	
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	s.connect((host, port))
 	return s.getsockname()[0]
 		
-#Returns the user's current IP address
-#returns None if the user is not connected to a network
 def get_ip_windows():
+	"""
+	Gets the IP of the user on a Windows machine.
+	On Linux, this always returns localhost.
+	"""
 	return gethostbyname(gethostname())

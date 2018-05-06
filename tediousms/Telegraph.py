@@ -1,9 +1,8 @@
-import RPi.GPIO as GPIO
-import time, pygame, numpy, asyncio
+import pydoc, pygame, numpy, asyncio, RPi.GPIO as GPIO
 from tkinter import INSERT, END
 from threading import Thread
 from multiprocessing.pool import ThreadPool
-from time import sleep
+from time import time, sleep
 from array import array
 from math import pi, sin
 
@@ -31,14 +30,27 @@ MIXER_SIZE = -16
 MIXER_CHANS = 1
 MIXER_BUFF = 1024
 
+"""
+The tone the telegraph makes when sounding units.
+Totally not appropriated from the paper piano solution.
+You have no evidence.
+I'd like to talk to my lawyer.
+"""
 class TelegraphTone(pygame.mixer.Sound):
 
 	def __init__(self, frequency):
+		"""Initialize a TelegraphTone instance.
+		
+		Keyword arguments:
+		frequency => the frequency (in Hz) of the tone that this class will play.
+		"""
 		self.frequency = frequency
 		pygame.mixer.Sound.__init__(self, buffer = self.build_samples())
 		self.set_volume(1)
-		
+	
 	def build_samples(self):
+		"""Builds the samples based on the sinusoidal waveform."""
+		
 		period = int(round(MIXER_FREQ / self.frequency))
 		amplitude = 2 ** (abs(MIXER_SIZE) - 1) - 1
 		samples = array("h", [0] * period)
@@ -54,9 +66,22 @@ class TelegraphTone(pygame.mixer.Sound):
 		
 		return samples
 		
+"""
+The class that handles GPIO interactions and is basically
+the "key" for the telegraph.
+"""
 class TelegraphKey(object):
 
 	def __init__(self, input_pin, signal_pin, recording_indicator_pin, incoming_message_indicator_pin, output_widget):
+		"""Initializes a TelegraphKey instance.
+		
+		Keyword arguments:
+		input_pin => the pin the telgraph key listens on for HIGH/LOW voltages for keying characters.
+		signal_pin => the pin the telegraph listens on to know when to begin/stop keying a character. HIGH = recording, LOW = not recording.
+		recording_indicator_pin => the pin the telegraph key will output its recording state to. HIGH = led ON, LOW = led OFF.
+		incoming_message_indicator_pin => the pin that outputs a signal for the incoming message indicator LED. Lights up when the input_pin is outputting HIGH or when a message is recieved.
+		output_widget => the widget the key will output to when a string is keyed in and recording is stopped.
+		"""
 		self.input_pin = input_pin
 		self.signal_pin = signal_pin
 		self.recording_indicator_pin = recording_indicator_pin
@@ -73,11 +98,8 @@ class TelegraphKey(object):
 		self._thread = Thread(target = self.poll_loop, daemon = True)
 		self._thread.start()
         
-	"""
-	Sets up the GPIO pins passed to the constructor.
-	Also sets the pin numbering sceme to Broadcom mode.
-	"""
 	def setup_gpio(self):		
+		"""A helper function that sets up the pins."""
 		for pin in (self.signal_pin, self.input_pin):
 			GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 			
@@ -86,19 +108,21 @@ class TelegraphKey(object):
 			GPIO.output(pin, GPIO.LOW)
 	
 	def _deinit(self):
+		"""A function that instantly aborts whatever keying was occurring and runs GPIO.cleanup()."""
 		RECORDING = False
 		self.__run = False
 		GPIO.cleanup()
 		
 	def poll_loop(self):
+		"""An infititely looping wrapper function to run on the listener thread. See Telegraph.TelegraphKey.poll_and_toggle_recording."""
 		while self.__run:
 			self.poll_and_toggle_recording()
 
-	"""
-	Runs on the _listener_thread when this class is initialized.
-	Toggles the global RECORDING variable based on if a button press was detected.
-	"""
 	def poll_and_toggle_recording(self):
+		"""Listens for signal_pin voltage changes and toggles the global RECORDING variable
+		each time it goes HIGH. 
+		"""
+
 		global RECORDING
 		#I know what you're thinking: jesus bro, a global async variable.
 		#But keep in mind: this is only being written to from inside
@@ -126,20 +150,17 @@ class TelegraphKey(object):
 		
 		sleep(0.2)
 
-	"""
-	Call this method to initialize the 750 Hz tone and play it when the button's pressed.
-	Without calling this the button will not play a sound.
-	"""
 	def init_sounds(self):
+		"""Initializes a 750 Hz code tone (FCC standard)."""
 		pygame.mixer.pre_init(MIXER_FREQ, MIXER_SIZE, MIXER_CHANS, MIXER_BUFF)
 		pygame.init()
 		self._750_Hz_tone = TelegraphTone(750)
 
-	"""
-	Begins keying a string. Returns the string when the
-	signal pin button is pressed.
-	"""
 	def key_string(self):
+		"""
+		Begins keying a string. Returns the string when the
+		signal pin button is pressed.
+		"""
 		string = ""
 
 		while RECORDING:
@@ -149,6 +170,7 @@ class TelegraphKey(object):
 		
 
 	def key_character(self):
+		"""Keys a single character."""
 		character = ""
 			
 		unit = self.key_unit_positive()
@@ -174,10 +196,8 @@ class TelegraphKey(object):
 
 		return character
 	
-	#Key a "positive" unit - i.e. a unit coded by the user pressing then releasing the button
-	#Used for everything besides unit measurements between letters and words.
 	def key_unit_positive(self):
-		#Hang until the button is pressed
+		"""Key a positive unit, or a unit that represents a letter or part of a letter."""
 		while not GPIO.input(self.input_pin) and RECORDING:
 			pass
 		
@@ -202,10 +222,9 @@ class TelegraphKey(object):
 		return time.time() - start
 		
 	
-	#Key a "negative" unit -- i.e. a unit that represents the space between letters or other units,
-	#and is not actually part of the message. This takes place between when the button is released and
-	#when it is pressed again.
 	def key_unit_negative(self):
+		"""Key a negative unit, or a unit that represents a space between letters or words."""
+		
 		#Record the start time
 		start = time.time()
 		
