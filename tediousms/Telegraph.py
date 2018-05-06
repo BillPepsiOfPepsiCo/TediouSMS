@@ -23,6 +23,30 @@ DASH = '-'
 
 RECORDING = False
 
+
+class TelegraphTone(pygame.mixer.Sound):
+
+	def __init__(self, frequency):
+		self.frequency = frequency	
+		pygame.mixer.Sound.__init__(self, buffer = self.build_samples())
+		self.set_volume(1)
+		
+	def build_samples(self):
+		period = int(round(MIXER_FREQ / self.frequency))
+		amplitude = 2 ** (abs(MIXER_SIZE) - 1) - 1
+		samples = array("h", [0] * period)
+		cur_amplitude = 0
+		cur_time = 0
+		
+		for i in range(period):
+			omega = 2 * pi * self.frequency
+			delta_t = 1 / self.frequency / period
+			cur_time += delta_t
+			cur_amplitude = amplitude * sin(omega * cur_time)
+			samples[i] = int(cur_amplitude)
+		
+		return samples
+		
 class TelegraphKey(object):
 
 	def __init__(self, input_pin, signal_pin, recording_indicator_pin, incoming_message_indicator_pin, output_widget):
@@ -106,15 +130,7 @@ class TelegraphKey(object):
 	Without calling this the button will not play a sound.
 	"""
 	def init_sounds(self):
-		frequency = 750 #Hz	   
-		sample_rate = pygame.mixer.get_init()[0]
-		period = int(round(sample_rate / frequency))
-		amplitude = 2 ** (abs(pygame.mixer.get_init()[1]) - 1) - 1
-
-		def frame_value(i):
-			amplitude * numpy.sin(2.0 * numpy.pi * frequency * i / sample_rate)
-
-		self._750_Hz_tone = numpy.array([frame_value(x) for x in range(0, period)]).astype(numpy.init16)
+		self._750_Hz_tone = TelegraphTone(750)
 
 	"""
 	Begins keying a string. Returns the string when the
