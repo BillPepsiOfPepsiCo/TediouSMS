@@ -23,35 +23,7 @@ class CustomBase_GUI(Base_GUI):
 		if len(text) > 0:
 			self._telesocket.send_message(text)
 		
-	def recipient_ip_entry_field_invalidcommand(self, *args):
-		print(args)
-		
-	def recipient_ip_entry_field_validatecommand(self, *args):
-		print(args)
-	
-	def recipient_ip_entry_field_xscrollcommand(self, *args):
-		pass
-		
-	def user_ip_entry_field_invalidcommand(self, *args):
-		print(args)
-		
-	def user_ip_entry_field_validatecommand(self, *args):
-		print(args)
-		
-	def user_ip_entry_field_xscrollcommand(self, *args):
-		pass
 
-	def outbound_message_textbox_xscrollcommand(self, *args):
-		print(args)
-		
-	def outbound_message_textbox_yscrollcommand(self, *args):
-		print(args)
-		
-	def inbound_message_textbox_xscrollcommand(self, *args):
-		print(args)
-		
-	def inbound_message_textbox_yscrollcommand(self, *args):
-		print(args)
 		
 	def listening_checkbox_command(self, *args):
 		if self.listening_checkbox_value.get():
@@ -71,11 +43,11 @@ class CustomBase_GUI(Base_GUI):
 					self._telegraph_key = TelegraphKey(16, 17, 27, 26, demo.outbound_message_textbox)
 				else:
 					print("Could not listen: user not connected to the Internet")
-					self.listening_checkbox_value.set(0)
+					self.listen_fail()
 			else:
 				print("Could not listen: invalid recipient IP address")
 				self.recipient_ip_entry_field.configure(background = "red")
-				self.listening_checkbox_value.set(0)
+				self.listen_fail()
 		else:
 			if self._telesocket is not None and self._telesocket.server_running():
 				print("Plugging ears")
