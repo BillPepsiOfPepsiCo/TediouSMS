@@ -7,18 +7,24 @@ Simultaneous messaging over IP with morse code messages
 
 # Dependencies:
 
-Python 3.6
+Python >=3.6
 
 websockets 4.0
 
-Tk/Tcl 8
+pygame
+
+numpy
+
+tkinter
 
 # Notes:
 
 Installation on a Raspberry Pi requires the installation of Python 3.6, but Raspbian
 comes with Python 3.5 installed. **TediouSMS will NOT work on a Python 3.5 installation.**
 
-I've automated this. Please just run ```sh install_dependencies.sh```. It will take a long time.
+I've automated the install process. Please just run ```sudo sh install_dependencies.sh```. 
+
+It will take a long time, like maybe a couple of hours. 
 
 # Limitations:
 
