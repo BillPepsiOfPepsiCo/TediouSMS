@@ -57,7 +57,7 @@ class TelegraphKey(object):
 			GPIO.setup(pin, GPIO.OUT)
 			GPIO.output(pin, GPIO.LOW)
 	
-	def __deinit(self);
+	def __deinit(self):
 		RECORDING = False
 		self.__run = False
 		GPIO.cleanup()
