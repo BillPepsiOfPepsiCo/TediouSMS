@@ -44,6 +44,7 @@ class TelegraphTone(pygame.mixer.Sound):
 		Keyword arguments:
 		frequency => the frequency (in Hz) of the tone that this class will play.
 		"""
+		GPIO.setmode(GPIO.BCM)
 		self.frequency = frequency
 		pygame.mixer.Sound.__init__(self, buffer = self.build_samples())
 		self.set_volume(1)
@@ -98,7 +99,8 @@ class TelegraphKey(object):
 		self._thread = Thread(target = self.poll_loop, daemon = True)
 		self._thread.start()
         
-	def setup_gpio(self):		
+	def setup_gpio(self):
+		GPIO.setmode(GPIO.BCM)	
 		"""A helper function that sets up the pins."""
 		for pin in (self.signal_pin, self.input_pin):
 			GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
@@ -129,23 +131,31 @@ class TelegraphKey(object):
 		#one thread, and is only read until the button is pressed again
 		#(the update of which occurs in the same thread as all other
 		#writes). So, it's surprisingly threadsafe.
-	
+
 		while True:
 			#Listen for a high voltage on the signal pin
-			#Begin keying the input until the signal pin recieves another high voltage
+			#Begin keying the input until the signal pin recieves another high voltage					GPIO.setmode(GPIO.BCM)
+
+			for i in ([0] * 100):
+				GPIO.setmode(GPIO.BCM)
+
+			GPIO.setup(self.signal_pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 			button_pressed = GPIO.input(self.signal_pin)
+			
 			if button_pressed:
 				RECORDING = not RECORDING
 				GPIO.output(self.recording_indicator_pin, RECORDING)
 				break
-		
+
 		if RECORDING:
 			self.output_widget.delete('1.0', END)
 			pool = ThreadPool(processes = 1)
 			self._keyed_string = pool.apply_async(self.key_string)
 		else:
 			self.output_widget.configure(state = "normal")
-			self.output_widget.insert('1.0', self._keyed_string.get())
+			if self._keyed_string is not None:
+				self.output_widget.delete('1.0', END)
+				self.output_widget.insert('1.0', self._keyed_string.get())
 			self.output_widget.configure(state = "disabled")
 		
 		sleep(0.2)
@@ -202,7 +212,7 @@ class TelegraphKey(object):
 			pass
 		
 		#Record the start time
-		start = time.time()
+		start = time()
 		
 		#Start playing the beep
 		self._750_Hz_tone.play(-1)
@@ -219,18 +229,18 @@ class TelegraphKey(object):
 		GPIO.output(self.incoming_message_indicator_pin, GPIO.LOW)
 		
 		#Return elapsed time
-		return time.time() - start
+		return time() - start
 		
 	
 	def key_unit_negative(self):
 		"""Key a negative unit, or a unit that represents a space between letters or words."""
 		
 		#Record the start time
-		start = time.time()
+		start = time()
 		
 		#Hang until button is pushed
 		while not GPIO.input(self.input_pin) and RECORDING:
 			pass
 		
 		#Return elapsed time
-		return time.time() - start
+		return time() - start
