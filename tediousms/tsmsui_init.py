@@ -1,4 +1,12 @@
-import asyncio, pydoc, RPi.GPIO as GPIO
+
+import asyncio, pydoc, sys
+
+try:
+	import RPi.GPIO as GPIO
+except ImportError:
+	print("Either you don\'t have the GPIO headers installed or you\'re not running this program on a Raspberry Pi. Please fix!")
+	sys.exit(0)
+	
 from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
@@ -11,31 +19,34 @@ DEFAULT_PORT = 42069 #nice meme
 
 class CustomBase_GUI(Base_GUI):
 	
-	"""
-	Initialize this GUI class.
-	Tosses up the call to the Base_GUI.
-	"""
 	def __init__(self, root):
+		"""
+		Initialize this GUI class.
+		Tosses up the call to the Base_GUI.
+		"""
+		
 		Base_GUI.__init__(self, root)
 		self._telesocket = None
 		self._telegraph_key = None
 	
-	"""
-	The callback for the send button.
-	Simply instructs the telesocket to send the message to its recipient_ip.
-	"""
 	def on_send_button_clicked(self, *args):
+		"""
+		The callback for the send button.
+		Simply instructs the telesocket to send the message to its recipient_ip.
+		"""
+		
 		text = self.outbound_message_textbox.get("1.0", END)
 		
 		if len(text) > 0:
 			self._telesocket.send_message(text)
 		
-	"""
-	The callback for the checkbox that says "listening on IP"
-	Checks if the user is connected to the internet and initializes a telesocket
-	with the specified recipient ip if they are.
-	"""
 	def listening_checkbox_command(self, *args):
+		"""
+		The callback for the checkbox that says "listening on IP"
+		Checks if the user is connected to the internet and initializes a telesocket
+		with the specified recipient ip if they are.
+		"""
+		
 		if self.listening_checkbox_value.get():
 			print("Time for some serious protection.")
 			print("Validating client IP address")
@@ -66,19 +77,21 @@ class CustomBase_GUI(Base_GUI):
 				self.recipient_ip_entry_field.configure(state = "normal")
 				self._telegraph_key._deinit()
 	
-	"""
-	Called when listening is unable to start for whatever reason.
-	Simply resets the checkbox to its off state.
-	"""
 	def listen_fail(self):
+		"""
+		Called when listening is unable to start for whatever reason.
+		Simply resets the checkbox to its off state.
+		"""
+		
 		self.listening_checkbox_value.set(0)
 	
-	"""
-	The callback supplied to the Telesocket.
-	Called whenever the Telesocket recieves a message.
-	This is where the beeps and boops are made.
-	"""
 	def on_message_received(self, message):
+		"""
+		The callback supplied to the Telesocket.
+		Called whenever the Telesocket recieves a message.
+		This is where the beeps and boops are made.
+		"""
+		
 		self.inbound_message_textbox.configure(state = "normal")
 		self.inbound_message_textbox.delete('1.0', END)
 		self.inbound_message_textbox.insert('1.0', message)
@@ -103,11 +116,13 @@ class CustomBase_GUI(Base_GUI):
 			GPIO.output(self._telegraph_key.incoming_message_indicator_pin, GPIO.LOW)
 				
 		self.inbound_message_textbox.configure(state = "disabled")
-"""
-ENTRY POINT TO TEDIOUSMS
-TO LAUNCH RUN: python3.6 tsmsui_init.py
-"""
+		
 def main():
+	"""
+	ENTRY POINT TO TEDIOUSMS
+	TO LAUNCH RUN: python3.6 tsmsui_init.py
+	"""
+	
 	GPIO.setmode(GPIO.BCM)
 	root = Tk()
 	demo = CustomBase_GUI(root)
