@@ -118,7 +118,14 @@ class TelegraphKey(object):
 	def poll_loop(self):
 		"""An infititely looping wrapper function to run on the listener thread. See Telegraph.TelegraphKey.poll_and_toggle_recording."""
 		while self.__run:
-			self.poll_and_toggle_recording()
+			try:
+				self.poll_and_toggle_recording()
+			except RuntimeError:
+				#This error is due to weird behavior from
+				#the RPi.GPIO library. The error happens each
+				#time and doesn't matter since the thread
+				#is being destructed anyway.
+				pass
 
 	def poll_and_toggle_recording(self):
 		"""Listens for signal_pin voltage changes and toggles the global RECORDING variable
@@ -132,12 +139,12 @@ class TelegraphKey(object):
 		#(the update of which occurs in the same thread as all other
 		#writes). So, it's surprisingly threadsafe.
 
-		while True:
+		while self.__run:
 			#Listen for a high voltage on the signal pin
 			#Begin keying the input until the signal pin recieves another high voltage					GPIO.setmode(GPIO.BCM)
 
-			for i in ([0] * 100):
-				GPIO.setmode(GPIO.BCM)
+			#for i in ([0] * 100):
+				#GPIO.setmode(GPIO.BCM)
 
 			GPIO.setup(self.signal_pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 			button_pressed = GPIO.input(self.signal_pin)
