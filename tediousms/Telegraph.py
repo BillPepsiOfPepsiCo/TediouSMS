@@ -146,7 +146,7 @@ class TelegraphKey(object):
 			#for i in ([0] * 100):
 				#GPIO.setmode(GPIO.BCM)
 
-			GPIO.setup(self.signal_pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+			#GPIO.setup(self.signal_pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
 			button_pressed = GPIO.input(self.signal_pin)
 			
 			if button_pressed:
