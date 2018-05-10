@@ -30,9 +30,9 @@ class NumberPad(Frame):
 		self.widget_to_type_in_to = widget_to_type_in_to
 	
 	def create_layout(self):
-		 r = 1
-		 c = 0
-		 
+		r = 1
+		c = 0
+
 		for number in button_list:
 			on_button_pressed = lambda button: self.type_num(number)
 			self.button = Button(self, text = number, width = 5, command = on_button_pressed).grid(row = r, column = c)
