@@ -18,6 +18,8 @@ from time import sleep
 
 DEFAULT_PORT = 42069 #nice meme
 
+button_list = list(range(0, 10)) + ["."]
+
 class NumberPad(Frame):
 	
 	def __init__(self, root, widget_to_type_in_to):
@@ -31,8 +33,9 @@ class NumberPad(Frame):
 		r = 1
 		c = 0
 
-		for number in list(range(0, 10)) + ["."]:
-			self.button = Button(self, text = number, width = 5, command = lambda button = self.button: print(button["text"])).grid(row = r, column = c)
+		for number in button_list:
+			command = lambda char = number: self.widget_to_type_in_to.insert(INSERT, char)
+			self.button = Button(self, text = number, width = 5, command = command).grid(row = r, column = c)
 			c += 1
 
 			if c > 2:
