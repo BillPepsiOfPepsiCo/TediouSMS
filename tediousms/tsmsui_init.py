@@ -25,6 +25,7 @@ class NumberPad(Frame):
 	def __init__(self, root, widget_to_type_in_to):
 		Frame.__init__(self, root)
 		self._root = root
+		self._root.title("Enter recipient IP")
 		self.grid()
 		self.create_layout()
 		self.widget_to_type_in_to = widget_to_type_in_to
@@ -35,7 +36,7 @@ class NumberPad(Frame):
 
 		for number in button_list:
 			command = lambda char = number: self.widget_to_type_in_to.insert(INSERT, char)
-			self.button = Button(self, text = number, width = 5, command = command).grid(row = r, column = c)
+			self.button = Button(self, text = number, width = 5, height = 5, command = command).grid(row = r, column = c)
 			c += 1
 
 			if c > 2:
