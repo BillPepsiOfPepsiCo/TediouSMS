@@ -18,14 +18,14 @@ from time import sleep
 
 DEFAULT_PORT = 42069 #nice meme
 
-button_list = list(range(0, 10)) + ["."]
+button_list = list(range(0, 10)) + [".", "<="]
 
 class NumberPad(Frame):
 	
 	def __init__(self, root, widget_to_type_in_to):
 		Frame.__init__(self, root)
 		self._root = root
-		self._root.title("Enter recipient IP")
+		self._root.title("IP")
 		self.grid()
 		self.create_layout()
 		self.widget_to_type_in_to = widget_to_type_in_to
@@ -35,8 +35,12 @@ class NumberPad(Frame):
 		c = 0
 
 		for number in button_list:
-			command = lambda char = number: self.widget_to_type_in_to.insert(INSERT, char)
-			self.button = Button(self, text = number, width = 5, height = 5, command = command).grid(row = r, column = c)
+			if number == "<=":
+				command = lambda: self.widget_to_type_in_to.delete(len(self.widget_to_type_in_to.get()) - 1, END)
+			else:
+				command = lambda char = number: self.widget_to_type_in_to.insert(INSERT, char)
+				
+			self.button = Button(self, text = number, width = 5, height = 4, command = command).grid(row = r, column = c)
 			c += 1
 
 			if c > 2:
