@@ -12,6 +12,7 @@ from tsmsui import Base_GUI, set_text, clear_text
 from socket import gethostbyname, gethostname
 from telesocket import *
 from Telegraph import *
+from websockets import *
 from time import sleep
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
 
@@ -141,7 +142,6 @@ def main():
 	root.protocol('WM_DELETE_WINDOW', root.quit)
 	root.bind("<FocusIn>", demo.on_focus_gained)
 
-	
 	if user_connected_to_network():
 		set_text(demo.user_ip_entry_field, get_user_ip_address())
 	else:
