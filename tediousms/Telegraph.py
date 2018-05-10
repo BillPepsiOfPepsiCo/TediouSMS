@@ -99,7 +99,7 @@ class TelegraphKey(object):
 		self._thread.start()
         
 	def setup_gpio(self):
-               	GPIO.setwarnings(False) 
+		GPIO.setwarnings(False) 
 		GPIO.setmode(GPIO.BCM)
 		"""A helper function that sets up the pins."""
 		for pin in (self.signal_pin, self.input_pin):
