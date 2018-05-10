@@ -153,11 +153,10 @@ class CustomBase_GUI(Base_GUI):
 		if self._numpad is None and event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
-			self.root.bind("<FocusIn>", print)
 			self._numpad._root.bind("<Destroy>", self.root.bind("<FocusIn>", self.reset_numpad))
 			
 	def reset_numpad(self, event):
-		self.send_button.focus_set()
+		self.listening_checkbox.focus_set()
 		self._numpad = None
 				
 def main():
