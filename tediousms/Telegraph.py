@@ -125,6 +125,7 @@ class TelegraphKey(object):
 		"""A function that instantly aborts whatever keying was occurring and runs GPIO.cleanup()."""
 		RECORDING = False
 		self.__run = False
+		self._keyed_string = ""
 		GPIO.cleanup()
 		
 	def poll_loop(self):
