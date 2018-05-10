@@ -23,6 +23,13 @@ button_list = list(range(0, 10)) + [".", "<="]
 class NumberPad(Frame):
 	
 	def __init__(self, root, widget_to_type_in_to):
+		"""Initializes a new NumberPad.
+		
+		Arguments:
+		root => the root window this will be spawned inside of.
+		widget_to_type_in_to => the widget the buttons of this numpad will write to.
+		"""
+		
 		Frame.__init__(self, root)
 		self._root = root
 		self._root.title("IP")
@@ -31,9 +38,11 @@ class NumberPad(Frame):
 		self.widget_to_type_in_to = widget_to_type_in_to
 			
 	def create_layout(self):
+		"""Creates the layout of the numberpad."""
+		
 		r = 1
 		c = 0
-
+		
 		for number in button_list:
 			if number == "<=":
 				command = lambda: self.widget_to_type_in_to.delete(len(self.widget_to_type_in_to.get()) - 1, END)
@@ -150,6 +159,11 @@ class CustomBase_GUI(Base_GUI):
 		self.inbound_message_textbox.configure(state = "disabled")
 		
 	def on_focus_gained(self, event):
+		"""This is where the NumberPad is spawned.
+		Called whenever any widget gets focused, but
+		only selecting the ip entry field actually does something.
+		"""
+		
 		if self._numpad is None and event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
@@ -157,6 +171,9 @@ class CustomBase_GUI(Base_GUI):
 			self._numpad._root.bind("<Destroy>", self.reset_numpad)
 			
 	def reset_numpad(self, event):
+		"""A function that re-binds the focus event since it has
+		to be unbound to prevent a looping window.
+		"""
 		self.send_button.focus_set()
 		self._numpad = None
 		self.root.bind("<FocusIn>", self.on_focus_gained)
