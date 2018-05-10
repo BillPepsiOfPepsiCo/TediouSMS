@@ -156,7 +156,7 @@ class CustomBase_GUI(Base_GUI):
 			self.root.bind("<FocusIn>", print)
 			self._numpad._root.bind("<Destroy>", self.root.bind("<FocusIn>", self.reset_numpad))
 			
-	def reset_numpad(self):
+	def reset_numpad(self, event):
 		self.send_button.focus_set()
 		self._numpad = None
 				
