@@ -32,16 +32,12 @@ class NumberPad(Frame):
 		c = 0
 
 		for number in list(range(0, 10)) + ["."]:
-			on_button_pressed = lambda button: self.type_num(number)
-			self.button = Button(self, text = number, width = 5, command = on_button_pressed).grid(row = r, column = c)
+			self.button = Button(self, text = number, width = 5, command = lambda button = self.button: print(button["text"])).grid(row = r, column = c)
 			c += 1
 
-			if c > 4:
+			if c > 2:
 				c = 0
 				r += 1
-	
-	def type_num(self, button):
-		self.widget_to_type_in_to.insert(INSERT, button["text"])
 	
 class CustomBase_GUI(Base_GUI):
 	
