@@ -30,9 +30,8 @@ class NumberPad(Frame):
 	def create_layout(self):
 		r = 1
 		c = 0
-		button_list = list(range(0, 10)) + ["."]
 
-		for number in button_list:
+		for number in list(range(0, 10)) + ["."]:
 			on_button_pressed = lambda button: self.type_num(number)
 			self.button = Button(self, text = number, width = 5, command = on_button_pressed).grid(row = r, column = c)
 			c += 1
