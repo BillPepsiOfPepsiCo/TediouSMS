@@ -150,14 +150,12 @@ class CustomBase_GUI(Base_GUI):
 		self.inbound_message_textbox.configure(state = "disabled")
 		
 	def on_focus_gained(self, event):
-		if self._numpad == None and event.widget == self.recipient_ip_entry_field:
+		if event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
-			self._numpad._root.bind("<Destroy>", self.reset_numpad)
-			
-	def reset_numpad(self, event):
-		self._numpad = None
-		
+			self.root.bind("<FocusIn>", pass)
+			self._numpad._root.bind("<Destroy>", self.root.bind("<FocusIn>", self.on_focus_gained))
+				
 def main():
 	"""
 	ENTRY POINT TO TEDIOUSMS
