@@ -153,7 +153,7 @@ class CustomBase_GUI(Base_GUI):
 		if self._numpad == None and event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
-			self._numpad._root.bind("<Destroy>", lambda thing = self: thing._numpad = None)
+			self._numpad._root.bind("<Destroy>", lambda event: self._numpad = None)
 		
 def main():
 	"""
