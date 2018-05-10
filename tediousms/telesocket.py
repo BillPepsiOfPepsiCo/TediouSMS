@@ -1,9 +1,14 @@
-import socket, asyncio, websockets, struct, platform, pydoc
+from sys import exit
+
+try:
+	import websockets
+except ImportError:
+	print("Websockets 4.0 is not installed or is unavailable for this python installation. Please install with pip!")
+	exit(0)
+
+import socket, asyncio, struct, platform, pydoc
 from socket import gethostbyname, gethostname
 from threading import Thread
-
-if "Linux" in platform.platform():
-	import fcntl
 
 PREVIOUS_SERVER_ADDRESS = None
 

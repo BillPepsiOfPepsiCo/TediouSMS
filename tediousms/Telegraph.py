@@ -1,4 +1,18 @@
-import pydoc, pygame, numpy, asyncio, RPi.GPIO as GPIO
+from sys import exit
+
+try:
+	import pygame
+except ImportError:
+	print("Pygame is not installed or is unavailable for this current python installation. Please install with pip!")
+	exit(0)
+
+try:
+	import numpy
+except ImportError:
+	print("Numpy is either not installed or is unavailable for this current python installation. Please install with pip!")
+	exit(0)
+	
+import pydoc, asyncio, RPi.GPIO as GPIO
 from tkinter import INSERT, END
 from threading import Thread
 from multiprocessing.pool import ThreadPool

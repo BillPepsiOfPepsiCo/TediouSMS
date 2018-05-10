@@ -1,11 +1,11 @@
-
-import asyncio, pydoc, sys
+from sys import exit
+import asyncio, pydoc
 
 try:
 	import RPi.GPIO as GPIO
 except ImportError:
 	print("Either you don\'t have the GPIO headers installed or you\'re not running this program on a Raspberry Pi. Please fix!")
-	sys.exit(0)
+	exit(0)
 	
 from tkinter import *
 from tsmsui import Base_GUI, set_text, clear_text
