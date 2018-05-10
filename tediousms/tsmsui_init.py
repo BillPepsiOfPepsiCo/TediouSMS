@@ -52,6 +52,7 @@ class CustomBase_GUI(Base_GUI):
 		"""
 		
 		Base_GUI.__init__(self, root)
+		self.root = root
 		self._telesocket = None
 		self._telegraph_key = None
 		self._numpad = None
@@ -148,12 +149,6 @@ class CustomBase_GUI(Base_GUI):
 		if self._numpad is None and event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
-			
-	def on_focus_lost(self, event):
-		if self._numpad is not None and event.widget == self.recipient_ip_entry_field:
-			print("I have lost focus")
-			self._numpad._root.destroy()
-			self._numpad = None
 		
 def main():
 	"""
@@ -174,7 +169,6 @@ def main():
 	root.title('TediouSMS')
 	root.protocol('WM_DELETE_WINDOW', root.quit)
 	root.bind("<FocusIn>", demo.on_focus_gained)
-	root.bind("<FocusOut>", demo.on_focus_lost)
 
 	if user_connected_to_network():
 		set_text(demo.user_ip_entry_field, get_user_ip_address())
