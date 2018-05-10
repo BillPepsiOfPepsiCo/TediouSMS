@@ -29,7 +29,7 @@ class NumberPad(Frame):
 		self.grid()
 		self.create_layout()
 		self.widget_to_type_in_to = widget_to_type_in_to
-	
+			
 	def create_layout(self):
 		r = 1
 		c = 0
@@ -150,9 +150,10 @@ class CustomBase_GUI(Base_GUI):
 		self.inbound_message_textbox.configure(state = "disabled")
 		
 	def on_focus_gained(self, event):
-		if self._numpad is None and event.widget == self.recipient_ip_entry_field:
+		if self._numpad = None and event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
+			self._numpad._root.bind("<Destroy>", lambda thing = self: thing._numpad = None)
 		
 def main():
 	"""
