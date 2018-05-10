@@ -56,6 +56,7 @@ class CustomBase_GUI(Base_GUI):
 		Base_GUI.__init__(self, root)
 		self._telesocket = None
 		self._telegraph_key = None
+		self._numpad = None
 	
 	def on_send_button_clicked(self, *args):
 		"""
@@ -151,7 +152,7 @@ class CustomBase_GUI(Base_GUI):
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
 			
 	def on_focus_lost(self, event):
-		if event.widget == self.recipient_ip_entry_field:
+		if self._numpad is not None and event.widget == self.recipient_ip_entry_field:
 			print("I have lost focus")
 			self._numpad._root.destroy()
 		
