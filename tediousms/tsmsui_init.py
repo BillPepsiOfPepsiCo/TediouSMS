@@ -147,7 +147,7 @@ class CustomBase_GUI(Base_GUI):
 		self.inbound_message_textbox.configure(state = "disabled")
 		
 	def on_focus_gained(self, event):
-		if event.widget == self.recipient_ip_entry_field:
+		if self._numpad is None and event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
 			
@@ -155,6 +155,7 @@ class CustomBase_GUI(Base_GUI):
 		if self._numpad is not None and event.widget == self.recipient_ip_entry_field:
 			print("I have lost focus")
 			self._numpad._root.destroy()
+			self._numpad = None
 		
 def main():
 	"""
