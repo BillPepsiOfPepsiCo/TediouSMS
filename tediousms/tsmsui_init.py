@@ -117,6 +117,10 @@ class CustomBase_GUI(Base_GUI):
 				
 		self.inbound_message_textbox.configure(state = "disabled")
 		
+	def on_focus_gained(self, event):
+		if event.widget == self.recipient_ip_entry_field:
+			print("I have achieved focus")
+		
 def main():
 	"""
 	ENTRY POINT TO TEDIOUSMS
@@ -135,6 +139,7 @@ def main():
 	
 	root.title('TediouSMS')
 	root.protocol('WM_DELETE_WINDOW', root.quit)
+	root.bind("<FocusIn>", demo.on_focus_gained)
 
 	
 	if user_connected_to_network():
