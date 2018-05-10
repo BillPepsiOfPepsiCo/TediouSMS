@@ -18,6 +18,33 @@ from time import sleep
 
 DEFAULT_PORT = 42069 #nice meme
 
+class NumberPad(Frame):
+	
+	button_list = list(range(0, 10)) + ["."]
+	
+	def __init__(self, root, widget_to_type_in_to):
+		Frame.__init__(self, root)
+		self._root = root
+		self.grid()
+		self.create_layout()
+		self.widget_to_type_in_to = widget_to_type_in_to
+	
+	def create_layout(self):
+		 r = 1
+		 c = 0
+		 
+		for number in button_list:
+			on_button_pressed = lambda button: self.type_num(number)
+			self.button = Button(self, text = number, width = 5, command = on_button_pressed).grid(row = r, column = c)
+			c += 1
+
+			if c > 4:
+				c = 0
+				r += 1
+	
+	def type_num(self, button):
+		self.widget_to_type_in_to.insert(INSERT, button["text"])
+	
 class CustomBase_GUI(Base_GUI):
 	
 	def __init__(self, root):
@@ -121,6 +148,12 @@ class CustomBase_GUI(Base_GUI):
 	def on_focus_gained(self, event):
 		if event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
+			self._numpad = NumberPad(Tk())
+			
+	def on_focus_lost(self, event):
+		if event.widget == self.recipient_ip_entry_field:
+			print("I have lost focus")
+			self._numpad._root.destroy()
 		
 def main():
 	"""
@@ -141,6 +174,7 @@ def main():
 	root.title('TediouSMS')
 	root.protocol('WM_DELETE_WINDOW', root.quit)
 	root.bind("<FocusIn>", demo.on_focus_gained)
+	root.bind("<FocusOut>", demo.on_focus_lost)
 
 	if user_connected_to_network():
 		set_text(demo.user_ip_entry_field, get_user_ip_address())
