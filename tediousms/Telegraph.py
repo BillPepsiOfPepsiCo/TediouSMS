@@ -44,7 +44,6 @@ class TelegraphTone(pygame.mixer.Sound):
 		Keyword arguments:
 		frequency => the frequency (in Hz) of the tone that this class will play.
 		"""
-		GPIO.setmode(GPIO.BCM)
 		self.frequency = frequency
 		pygame.mixer.Sound.__init__(self, buffer = self.build_samples())
 		self.set_volume(1)
@@ -100,7 +99,8 @@ class TelegraphKey(object):
 		self._thread.start()
         
 	def setup_gpio(self):
-		GPIO.setmode(GPIO.BCM)	
+               	GPIO.setwarnings(False) 
+		GPIO.setmode(GPIO.BCM)
 		"""A helper function that sets up the pins."""
 		for pin in (self.signal_pin, self.input_pin):
 			GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
