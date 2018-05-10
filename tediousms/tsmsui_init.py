@@ -20,8 +20,6 @@ DEFAULT_PORT = 42069 #nice meme
 
 class NumberPad(Frame):
 	
-	button_list = list(range(0, 10)) + ["."]
-	
 	def __init__(self, root, widget_to_type_in_to):
 		Frame.__init__(self, root)
 		self._root = root
@@ -32,6 +30,7 @@ class NumberPad(Frame):
 	def create_layout(self):
 		r = 1
 		c = 0
+		button_list = list(range(0, 10)) + ["."]
 
 		for number in button_list:
 			on_button_pressed = lambda button: self.type_num(number)
