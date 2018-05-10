@@ -148,7 +148,7 @@ class CustomBase_GUI(Base_GUI):
 	def on_focus_gained(self, event):
 		if event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
-			self._numpad = NumberPad(Tk())
+			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
 			
 	def on_focus_lost(self, event):
 		if event.widget == self.recipient_ip_entry_field:
