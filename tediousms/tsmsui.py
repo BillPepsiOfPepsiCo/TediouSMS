@@ -42,13 +42,13 @@ class Base_GUI(object):
 		self.outbound_message_textbox = Text(root,
 			height = 0,
 			width = 0,
-			state = NORMAL,
+			state = "disabled",
 		)
 				
 		self.inbound_message_textbox = Text(root,
 			height = 0,
 			width = 0,
-			state = NORMAL,
+			state = "disabled",
 		)
 		
 		self.user_ip_entry_field = Entry(root,

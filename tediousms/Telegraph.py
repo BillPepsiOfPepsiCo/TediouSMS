@@ -127,7 +127,7 @@ class TelegraphKey(object):
 		"""A function that instantly aborts whatever keying was occurring and runs GPIO.cleanup()."""
 		RECORDING = False
 		self.__run = False
-		self._keyed_string = ""
+		self._keyed_string = None
 		GPIO.cleanup()
 		
 	def poll_loop(self):
@@ -156,12 +156,8 @@ class TelegraphKey(object):
 
 		while self.__run:
 			#Listen for a high voltage on the signal pin
-			#Begin keying the input until the signal pin recieves another high voltage					GPIO.setmode(GPIO.BCM)
-
-			#for i in ([0] * 100):
-				#GPIO.setmode(GPIO.BCM)
-
-			#GPIO.setup(self.signal_pin, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+			#Begin keying the input until the signal pin recieves another high voltage
+			  
 			button_pressed = GPIO.input(self.signal_pin)
 			
 			if button_pressed:
