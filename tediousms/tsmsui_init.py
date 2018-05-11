@@ -18,7 +18,7 @@ from time import sleep
 
 DEFAULT_PORT = 1337 #nice meme
 
-button_list = list(range(0, 10)) + [".", "<="]
+button_list = list(range(1, 10)) + ["0", ".", "<="]
 
 class NumberPad(Frame):
 	
