@@ -138,6 +138,9 @@ class Telesocket(object):
 				
 		except TimeoutError:
 			print("It appears there is no open server at", self.client_uri())
+		except ConnectionRefusedError:
+			print("Connection to %s refused." % self.client_uri())
+			
 	
 	def send_message(self, message):
 		"""

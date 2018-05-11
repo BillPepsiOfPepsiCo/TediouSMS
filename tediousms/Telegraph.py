@@ -177,7 +177,7 @@ class TelegraphKey(object):
 			self.output_widget.configure(state = "normal")
 			if self._keyed_string is not None:
 				self.output_widget.delete('1.0', END)
-				self.output_widget.insert('1.0', self._keyed_string.get())
+				self.output_widget.insert('1.0', self._keyed_string)
 			self.output_widget.configure(state = "disabled")
 		
 		sleep(0.2)

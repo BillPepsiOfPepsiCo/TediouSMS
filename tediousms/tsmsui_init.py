@@ -16,7 +16,7 @@ from websockets import *
 from time import sleep
 #Credits to ya boi Chris Rice for the gorgeous user interface UI interface
 
-DEFAULT_PORT = 42069 #nice meme
+DEFAULT_PORT = 1337 #nice meme
 
 button_list = list(range(0, 10)) + [".", "<="]
 
