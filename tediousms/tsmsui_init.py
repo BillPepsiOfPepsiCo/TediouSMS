@@ -1,4 +1,4 @@
-from sys import exit
+from sys import exit, version_info
 import asyncio, pydoc
 
 try:
@@ -31,8 +31,8 @@ class NumberPad(Frame):
 		"""
 		
 		Frame.__init__(self, root)
-		self._root = root
-		self._root.title("IP")
+		self.root = root
+		self.root.title("IP")
 		self.grid()
 		self.create_layout()
 		self.widget_to_type_in_to = widget_to_type_in_to
@@ -167,42 +167,45 @@ class CustomBase_GUI(Base_GUI):
 		if self._numpad is None and event.widget == self.recipient_ip_entry_field:
 			print("I have achieved focus")
 			self._numpad = NumberPad(Tk(), self.recipient_ip_entry_field)
+			#This prevents more than 1 numpad from being spawned at a time by not responding to additional focus events
+			#until the focus event is rebound in the on_numpad_closed function.
+			#The expression lambda: None is basically how you pass an empty function with lambdas.
+			#Functions that don't return anything return None, and lambda functions have to return
+			#something to be a complete expression.
 			self.root.bind("<FocusIn>", lambda event: None)
-			self._numpad._root.bind("<Destroy>", self.reset_numpad)
+			self._numpad.root.bind("<Destroy>", self.on_numpad_closed)
 			
-	def reset_numpad(self, event):
+	def on_numpad_closed(self, event):
 		"""A function that re-binds the focus event since it has
 		to be unbound to prevent a looping window.
 		"""
 		self.send_button.focus_set()
 		self._numpad = None
+		#Rebind the focus event to the correct function whenever the numpad is closed.
 		self.root.bind("<FocusIn>", self.on_focus_gained)
 
-def main():
-	"""
-	ENTRY POINT TO TEDIOUSMS
-	TO LAUNCH RUN: python3.6 tsmsui_init.py
-	"""
-	
-	GPIO.setmode(GPIO.BCM)
-	root = Tk()
-	demo = CustomBase_GUI(root)
-	
-	#Initialize the checkbox so we can read its value
-	#This is super weird and overly complicated because
-	#it has to come after the Tk() call unless you're on python 2
-	demo.listening_checkbox_value = IntVar()
-	demo.listening_checkbox.configure(variable = demo.listening_checkbox_value)
-	
-	root.title('TediouSMS')
-	root.protocol('WM_DELETE_WINDOW', root.quit)
-	root.bind("<FocusIn>", demo.on_focus_gained)
+if __name__ == '__main__': 
+	if version_info >= (3, 6):
+		GPIO.setmode(GPIO.BCM)
+		root = Tk()
+		demo = CustomBase_GUI(root)
+		
+		#Initialize the checkbox so we can read its value
+		#This is super weird and overly complicated because
+		#it has to come after the Tk() call unless you're on python 2
+		demo.listening_checkbox_value = IntVar()
+		demo.listening_checkbox.configure(variable = demo.listening_checkbox_value)
+		
+		root.title('TediouSMS')
+		root.protocol('WM_DELETE_WINDOW', root.quit)
+		root.bind("<FocusIn>", demo.on_focus_gained)
 
-	if user_connected_to_network():
-		set_text(demo.user_ip_entry_field, get_user_ip_address())
+		if user_connected_to_network():
+			set_text(demo.user_ip_entry_field, get_user_ip_address())
+		else:
+			set_text(demo.user_ip_entry_field, "Not connected to Internet")
+
+		root.mainloop()
 	else:
-		set_text(demo.user_ip_entry_field, "Not connected to Internet")
-
-	root.mainloop()
-
-if __name__ == '__main__': main()
+		print("Python 3.6 and above is required to run TediouSMS.")
+		exit(0)
