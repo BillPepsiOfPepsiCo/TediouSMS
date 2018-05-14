@@ -131,7 +131,7 @@ class Telesocket(object):
 		"""
 		
 		try:
-			async with websockets.connect(self.client_uri(), timeout = 2) as websocket:
+			async with websockets.connect(self.client_uri(), timeout = 10) as websocket:
 				print("Connection to %s successfully established" % self.client_uri())
 				await websocket.send(message)
 				print("Sent message => %s\nTo recipient => %s" % (message, self.client_uri()))
